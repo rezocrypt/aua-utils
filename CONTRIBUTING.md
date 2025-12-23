@@ -333,12 +333,25 @@ This works also for **Safari**. Do not forget to run [Build](#build) before doin
 # Roadmap
 
 ## Planned Features
-- [ ] Create schedule-plugin which will let in browser to collect the classes and create calendar for student and then add functionality to add classes to the schedule from jenzabar classlist to see weather they fit or not (I think mostly for understanding times). 
+
+Here are listed some planned features which I (or others) will add as soon as possible.
+
+### Courses Plugin
+
+- [ ] Highlight matching parts in text.
+- [ ] Colorful highlight of rows and not full yellow background.
+- [ ] Add schedule to courses plugin for collecting courses (or maybe seperate plugin).
+- [ ] Add gened filtering possibility in courses plugin.
+
+### Other
+
 - [ ] Create some class review platform (telegram bot or maybe even hosted website) to give recommendation to class (or vise versa).
 
 ## Known Issues
 - [ ] The project itself lacks icon, so if someone can create a beautiful icon for the project aua-utils I would be very happy.
 - [ ] There may be some grammatical mistakes in the documentation. If someone is proficient in English—or simply notices an error—please let me know. I am not very good at English either, but I am happy that I scored 94 on the TOEFL :)
+- [ ] I think there is need for normal youtube tutorial videos so if someone can record and send it to me I would be very grateful.
+- [ ] I have never tested for Safari and Opera so if someone will test (and even record video for YouTube) it would be very helpful for the project.
 
 
 
