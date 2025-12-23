@@ -91,6 +91,8 @@ AUA Gened Plugin helps you find general education courses by keyword, theme, or 
 
 Useful Links is a special section in the AUA Utils extension where important and frequently accessed webpages are listed.
 
+<img width="895" height="337" alt="image" src="https://github.com/user-attachments/assets/147e9ffd-8118-4dbb-8db6-0a303d3227a4" />
+
 
 # Usage
 
