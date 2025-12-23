@@ -6,6 +6,9 @@ Plugins are separate code blocks that can work independently of the extension. T
 
 AUA Utils Extension is the core part of the AUA Utils project. It represents the browser-based component that delivers the plugins directly inside AUA web platforms and serves as the main interface between the user and the overall AUA Utils ecosystem. 
 
+<img width="1334" height="1361" alt="image" src="https://github.com/user-attachments/assets/7f3fd968-31ab-4d66-b941-ec5af80c207b" />
+
+
 
 ---
 
@@ -73,10 +76,15 @@ Here are the single-function-script plugins, which are injected into the corresp
 
 AUA Courses Plugin helps you find and filter courses more quickly and with greater flexibility.
 
+<img width="1280" height="469" alt="image" src="https://github.com/user-attachments/assets/d41c4a16-675b-40cd-a0d6-f8eca958c1d6" />
+
+
 
 ### AUA Gened Plugin
 
 AUA Gened Plugin helps you find general education courses by keyword, theme, or level.
+
+<img width="1280" height="452" alt="image" src="https://github.com/user-attachments/assets/1b319745-dcfd-4ecc-82ba-c364730436a8" />
 
 
 ## Useful Links
