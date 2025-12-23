@@ -6,8 +6,6 @@ Plugins are separate code blocks that can work independently of the extension. T
 
 AUA Utils Extension is the core part of the AUA Utils project. It represents the browser-based component that delivers the plugins directly inside AUA web platforms and serves as the main interface between the user and the overall AUA Utils ecosystem. 
 
-<img width="1334" height="1361" alt="image" src="https://github.com/user-attachments/assets/7f3fd968-31ab-4d66-b941-ec5af80c207b" />
-
 
 
 ---
@@ -64,7 +62,9 @@ For Safari, the only method is using the Tampermonkey extension. Here is a video
 
 # Features
 
-Here, the features included in AUA Utils are described. To understand the architecture of the codebase, see the [Contributing](#contributing) section.
+Here, the features included in AUA Utils are described. To understand the architecture of the codebase, see the [Contributing](#contributing) section. This image describes some abstract structure of the project.
+
+<img width="1334" height="1361" alt="image" src="https://github.com/user-attachments/assets/7f3fd968-31ab-4d66-b941-ec5af80c207b" />
 
 
 ## Plugins
