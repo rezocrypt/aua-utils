@@ -1,0 +1,79 @@
+/* ----- General Styles ----- */
+*{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+}
+
+body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #002147;
+        color: #e0e0e0;
+}
+
+.container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+}
+
+h1 {
+        text-align: center;
+        color: white;
+}
+
+h2 {
+        color: white;
+        margin-bottom: 1rem;
+}
+
+p {
+        line-height: 1.6;
+        margin-bottom: 1rem;
+}
+
+a {
+        color: #00aaff;
+        text-decoration: none;
+}
+
+a:hover {
+        text-decoration: underline;
+}
+
+ul {
+        padding-left: 1.2rem;
+}
+
+/* ----- Section Style ----- */
+section {
+        padding: 2rem 0;
+        border-bottom: 1px solid #1f3a5f;
+}
+
+section:last-child {
+        border-bottom: none;
+}
+
+.section-image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 15px 0;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* ----- Markdown Ifram Style ----- */
+.markdown-iframe {
+    width: 100%;
+    height: 600px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 10px;
+    overflow: auto;
+    background-color: #fefefe;
+}

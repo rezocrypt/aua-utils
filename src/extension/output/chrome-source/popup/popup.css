@@ -1,0 +1,221 @@
+/* ----- Global ----- */
+
+html body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    width: 610px;
+    height: auto;
+    max-height: 900px;
+    box-sizing: border-box;
+    background: #f9f9f9;
+}
+
+
+
+/* ----- Header ----- */
+
+.appHeader {
+    width: 100vw;
+    box-sizing: border-box;
+
+    background: #002246;
+    color: #ffffff;
+    padding: 10px 8px 8px 8px;
+
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    cursor: move;
+    margin-bottom: 25px;
+
+}
+
+.appHeaderIcon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+.appHeaderIcon img {
+    width: 32px;
+    height: 32px;
+}
+
+.appHeaderTitle {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 4px;
+    text-align: center;
+}
+
+
+
+/* ----- Plugin Controllers ----- */
+
+.pluginsTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #002246;
+    margin: 4px 0 10px 8px;
+}
+
+#pluginControllersContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 8px;
+}
+
+.pluginController {
+    width: 130px;
+    height: 90px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    border-radius: 10px;
+    border: 1px solid #d8d8d8;
+    background: #ffffff;
+
+    cursor: pointer;
+    user-select: none;
+
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.pluginController:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
+}
+
+.pluginController::before {
+    content: "";
+    width: 28px;
+    height: 28px;
+    background: url("https://aua.am/favicon.ico") center / contain no-repeat;
+}
+
+.pluginController {
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.pluginEnabled {
+    background-color: #002246;
+    border-color: #002246;
+    color: #ffffff;
+}
+
+.pluginDisabled {
+    background-color: #f4f4f4;
+    border-color: #d0d0d0;
+    color: #666666;
+}
+
+
+
+/* ----- Useful Links Section ----- */
+
+.linksTitle {
+    font-size: 16px;
+    /* match plugin section title size */
+    font-weight: 600;
+    color: #002246;
+    /* same dark blue color */
+    margin: 4px 0 10px 8px;
+}
+
+#usefulLinksContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 8px;
+
+}
+
+.linkCard {
+    width: 140px; /* fixed width */
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    border-radius: 10px;
+    background-color: #235285;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+
+    padding: 6px; /* padding inside card */
+    box-sizing: border-box; /* include padding in width */
+
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.linkCard:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    background-color: #003166;
+}
+
+.linkIcon {
+    width: 28px;
+    height: 28px;
+    background: url("https://aua.am/favicon.ico") center / contain no-repeat;
+}
+
+
+.linkText {
+    font-size: 13px;
+    font-weight: 600;
+    word-break: break-word; /* wrap long words */
+    white-space: normal; /* allow wrapping */
+}
+
+
+
+/* ----- Footer ----- */
+.appFooter {
+    width: 100%;
+    background: #002147;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 0;
+    box-sizing: border-box;
+    margin-top: 25px;
+}
+
+.footerIcon {
+    width: 22px;
+    height: 22px;
+    filter: invert(1);
+    cursor: pointer;
+}
+
+
+
+/* ----- Markdown Iframe Section ----- */
+.markdown-reading-iframe {
+    width: 100%;
+    height: 600px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 10px;
+    overflow: auto;
+    background-color: #fefefe;
+}

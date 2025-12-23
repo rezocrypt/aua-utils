@@ -1,0 +1,17 @@
+// ==UserScript==
+// @name         AUA Gened Plugin
+// @namespace    https://github.com/rezocrypt/aua-utils/
+// @version      1.0.0
+// @description  AUA Gened Plugin helps you find general education courses by keyword, theme, or level.
+// @match        https://gened.aua.am/courses-and-their-clusters/
+// @run-at       document-end
+// @grant        none
+// @icon         https://aua.am/favicon.ico
+// @author       rezocrypt
+// @match        *://*/*
+// @supportURL   https://t.me/rezocrypt
+// @updateURL    https://github.com/rezocrypt/aua-utils/blob/main/tampermonkey/output/scripts/gened-plugin.js
+// @downloadURL  https://github.com/rezocrypt/aua-utils/blob/main/tampermonkey/output/scripts/gened-plugin.js
+// @license      GPL-3.0
+// ==/UserScript==
+
