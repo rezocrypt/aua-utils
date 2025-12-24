@@ -15,7 +15,7 @@
 // @license      GPL-3.0
 // ==/UserScript==
 
-(function () {
+(function() {
         "use strict";
 
         /* 
@@ -786,10 +786,13 @@
 
                         // --- 2.1 Read row data ---
                         const cells = row.children;
-                        const levelText = cells[1]?.textContent || "";
+                        const levelText = cells[1]?.textContent?.trim() || "";
                         const nameText = (cells[2]?.textContent || "").toLowerCase();
                         const themesText = cells[3]?.textContent || "";
 
+                        if (nameText.includes("ndersta")) {
+                                console.log(`FOR THAT PURPOSE IS ${levelText} for ${nameText}`)
+                        }
                         const classLevel = levelText.startsWith("1") ? "lower" : "upper";
 
                         // --- 2.2 Level filter ---
