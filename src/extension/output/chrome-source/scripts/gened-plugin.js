@@ -772,10 +772,6 @@
                         const levelText = cells[1]?.textContent?.trim() || "";
                         const nameText = (cells[2]?.textContent || "").toLowerCase();
                         const themesText = cells[3]?.textContent || "";
-
-                        if (nameText.includes("ndersta")) {
-                                console.log(`FOR THAT PURPOSE IS ${levelText} for ${nameText}`)
-                        }
                         const classLevel = levelText.startsWith("1") ? "lower" : "upper";
 
                         // --- 2.2 Level filter ---

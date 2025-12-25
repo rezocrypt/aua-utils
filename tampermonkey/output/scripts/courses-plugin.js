@@ -20,7 +20,7 @@
     // ----- Checking if we are in right place or no -----
 
     if (!location.href.includes("auasonis.jenzabarcloud.com/GENSRsC.cfm")) return;
-    
+
     // ----- Global Variables And Constants -----
 
     let courses = [];
@@ -1069,9 +1069,10 @@
 
             // Temporary highlight
             row.dataset.tempHighlight = "true";
+
             // Store current color before temporary highlight
             row.dataset.originalBg = getComputedStyle(row).backgroundColor;
-            row.style.backgroundColor = "#ffcc33";
+            row.style.backgroundColor = "#f7f183ff";
 
             setTimeout(() => {
                 row.style.backgroundColor = row.dataset.originalBg;
@@ -1344,9 +1345,172 @@
         if (loader) loader.remove();
     }
 
+    // Special function which generates color for each DIFFERENT string and even
+    // if strings are similar they will have completly different colors.
+    function stringToDistinctColor(str) {
+        // Formatting string for parsing to algorithm
+        str = str.toLowerCase().trim();
+
+        // Convert string to number
+        let hash = 5381;
+        for (let i = 0; i < str.length; i++) {
+            hash = ((hash << 5) + hash) + str.charCodeAt(i);
+        }
+
+        // Generate color components
+        const hue = Math.abs((hash * 97) % 360);          // 0–360
+        const saturation = 65 + (Math.abs((hash >> 8) * 13) % 25); // 65–90%
+        const lightness = 75 + (Math.abs((hash >> 16) * 7) % 20);  // 75–94%
+
+        // Returning generated color
+        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    }
+
+    // Function for applying highlight style
+    function enableRowHighlightStyle(row, searchInputKeywords) {
+
+        const rowIsFormatted = row.classList.contains("formatted-row");
+
+        // Enabling highlight style 
+        row.querySelectorAll("td").forEach(td => {
+
+            let target = td;
+
+            // Finding the deepest child of each td because it happens that the 
+            // actual content is insite <p> or even <p><em> and then hihlighting it
+            while (target.children.length > 0) {
+                // If its child is just higlighted element than it is not counted and we reached to bottom
+                if (target.children[0].id === "highlightMark") break;
+
+                // Assigning the child element as new target
+                target = target.children[0];
+            }
+
+            // Getting text content and generating UNIQUE color for SAME strings 
+            const text = target.textContent.trim();
+            const bgColor = stringToDistinctColor(text);
+
+
+            // Applying styles that are onetime when row is never passed through this funciton
+            if (rowIsFormatted === false) {
+
+                // If we have all content inside a td element as text then we put it inside span
+                // and then continue
+                if (target === td) {
+                    // Creating new element for text
+                    const span = document.createElement("span");
+
+                    // Adding text to new element
+                    span.textContent = td.textContent.trim();
+
+                    // Clearing the actual td and adding new element.
+                    td.textContent = "";
+                    td.appendChild(span);
+                    target = span;
+                }
+
+                // Adding onclick event to filter the classes when user clicks to 
+                // specific data box (like if )
+                target.onclick = () => {
+                    // Getting text content of element
+                    const text = target.textContent.trim();
+
+                    // Defining search input element because when clicked the text content
+                    // will be appended inside input's value
+                    const searchInputElement = document.getElementById("searchInput");
+
+                    // If it already is included then we remove, otherwise we include
+                    if (searchInputElement.value.includes(text)) {
+
+                        // Making search input value to get rid from that input that already contains
+                        searchInputElement.value =
+                            searchInputElement.value =
+                            searchInputElement.value
+                                .replaceAll(text, "")
+                                .replace(/\s+/g, " ")
+                                .trim();
+                    }
+                    else {
+                        // Appending the text content to searchInput for exact matching
+                        searchInputElement.value += ` ${text} `;
+                    }
+
+                    // Finally calling filter function
+                    highlightRows();
+                };
+
+            }
+
+
+            // Applying style to highlighted td
+            target.style.cssText = `
+                background-color: ${bgColor};
+                color: #333;
+                border-radius: 15px;
+                padding: 4px 12px;
+                margin: 2px;
+                display: inline-block;
+                border: 1px solid rgba(0,0,0,0.1);
+                cursor: pointer;
+            `;
+
+            // Making brighter if there is exact match
+            let newText = text;
+
+            // Matching each keyword and putting it inside <mark> for higlighting
+            searchInputKeywords.forEach(keyword => {
+                const regex = new RegExp(`(?<!<mark[^>]*>)(` + keyword + `)(?![^<]*<\/mark>)`, "gi");
+                newText = newText.replace(regex, `<mark id="highlightMark" style="background-color: ${stringToDistinctColor(text)}; padding: 0px;">$1</mark>`);
+            });
+
+
+
+            // Changing the <td> background to brighter color
+            if (searchInputKeywords.some(k => text.toLowerCase().includes(k.toLowerCase()))) {
+                target.style.backgroundColor = `hsl(${stringToDistinctColor(text).match(/\d+/)[0]},100%,75%)`;
+                target.innerHTML = newText;
+            }
+
+
+        });
+
+
+        // Making each td (row data) to have border and also padding
+        row.querySelectorAll("td").forEach(td => {
+            td.style.border = "1px solid rgba(0,0,0,0.3)";
+            td.style.padding = "8px 12px";
+        });
+
+        // Also changing background color when highlighted
+        if (showOnly === false) {
+            row.style.setProperty("background-color", "#fdf3b9ff", "important");
+        }
+        else {
+            row.style.setProperty("background-color", "#ffffff", "important");
+        }
+
+        // Finally changing state to formatted row for not going each time and doing the same thing
+        if (rowIsFormatted === false) {
+            row.classList.add("formatted-row");
+        }
+    }
+
+    // Function for disabling highlight style
+    function disableRowHighlightStyle(row) {
+        row.querySelectorAll("td").forEach(td => {
+            // Remove all added <mark> elements but keep their text
+            td.querySelectorAll("#highlightMark").forEach(mark => {
+                const textNode = document.createTextNode(mark.textContent);
+                mark.replaceWith(textNode);
+            });
+
+            row.style.setProperty("background-color", "#ffffff", "important");
+
+        });
+    }
+
     // Function for highlighting rows based on search and filters
     function highlightRows(calledBy = null) {
-        console.log("I at least entered highlightRows");
         // Defining array for available times
         let availableTimes = [];
 
@@ -1462,10 +1626,10 @@
 
                 // Highlighting row if any filter is active (because if no filter is active, all rows are matching)
                 if (!(searchInputKeywords.length === 0 && checkedDays.length === 0 && checkedTimes.length === 0)) {
-                    row.style.setProperty("background-color", "#ffff99", "important"); // Highlight color
+                    enableRowHighlightStyle(row, searchInputKeywords);
                 }
                 else {
-                    row.style.setProperty("background-color", "", "important"); // Reset color
+                    enableRowHighlightStyle(row, searchInputKeywords);
                 }
 
                 // Showing row
@@ -1494,7 +1658,7 @@
                 }
             } else {
                 // Resetting any highlight
-                row.style.setProperty("background-color", "", "important"); // Reset color
+                disableRowHighlightStyle(row)
                 row.style.display = showOnly ? "none" : ""; // Hide if show only matching is active
 
                 // Adding not-matching class and removing matching class
