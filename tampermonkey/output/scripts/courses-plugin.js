@@ -321,7 +321,7 @@
     `;
 
         const img = document.createElement('img');
-        img.src = 'https://aua.am/favicon.ico';
+        img.src = 'https://raw.githubusercontent.com/rezocrypt/aua-utils/refs/heads/main/resources/logos/logo.png';
         img.style.cssText = `
         width: 100%;
         height: 100%;
@@ -427,10 +427,10 @@
 
         // Creating the actual image using aua.am/favicon.ico in case of change
         const image = document.createElement("img");
-        image.src = "https://aua.am/favicon.ico";
+        image.src = "https://raw.githubusercontent.com/rezocrypt/aua-utils/refs/heads/main/resources/logos/logo.png";
         image.style.cssText = `
-            width: 32px;
-            height: 32px;
+            width: 38px;
+            height: 38px;
         `;
         imageContainer.appendChild(image);
 
