@@ -27,6 +27,7 @@
     let matchingCourses = [];
     let showOnly = false;
     let checkedDays = [];
+    let notificationShown = false;
 
     const indexes = ["name", "section", "session", "credits", "campus", "instructor", "times", "seats", "spacesWaiting", "deliveryMethod", "distanceLearning", "location", "gened", "schedule"]
 
@@ -37,8 +38,183 @@
     let schedulesData = {
         schedules: [{}, {}, {}],
         wishlist: {},
-        activeScheduleIndex: 0
+        activeScheduleIndex: 0,
+        isScheduleOpened: true
     }
+
+    schedulesData.wishlist = {
+        "b5869cc0b5869cc0b5869cac0b5869cc0": {
+            "name": "Calculus 2",
+            "times": "MON 9:30am-10:20am, WED 9:30am-10:20am, FRI 9:30am-10:20am",
+            "timesFormatted": [
+                {
+                    "weekday": "monday",
+                    "start": 570,
+                    "end": 620
+                },
+                {
+                    "weekday": "wednesday",
+                    "start": 570,
+                    "end": 620
+                },
+                {
+                    "weekday": "friday",
+                    "start": 570,
+                    "end": 620
+                }
+            ],
+            "instructor": "Karen Keryan",
+            "location": "Classroom 414W Paramaz Avedissian Building"
+        },
+    }
+    schedulesData.schedules = [
+        {
+            "99fcbe6b99fcbe6b99fcbe6b99fcbe6b": {
+                "name": "Mechanics",
+                "times": "TUE 1:30pm-2:50pm, THU 1:30pm-2:50pm",
+                "timesFormatted": [
+                    {
+                        "weekday": "tuesday",
+                        "start": 810,
+                        "end": 890
+                    },
+                    {
+                        "weekday": "thursday",
+                        "start": 810,
+                        "end": 890
+                    }
+                ],
+                "instructor": "Hrachya Kocharyan",
+                "location": "Classroom 413W Paramaz Avedissian Building"
+            },
+            "19a511e819a511e819a511e819a511e8": {
+                "name": "Mechanics Lab",
+                "times": "TUE 10:30am-11:50am",
+                "timesFormatted": [
+                    {
+                        "weekday": "tuesday",
+                        "start": 630,
+                        "end": 710
+                    }
+                ],
+                "instructor": "Bilor Kurghinyan",
+                "location": "Physics Lab Main Building"
+            },
+            "4d1a08b34d1a08b34d1a08b34d1a08b3": {
+                "name": "Freshman Seminar 2",
+                "times": "TUE 9:00am-10:20am, THU 9:00am-10:20am",
+                "timesFormatted": [
+                    {
+                        "weekday": "tuesday",
+                        "start": 540,
+                        "end": 620
+                    },
+                    {
+                        "weekday": "thursday",
+                        "start": 540,
+                        "end": 620
+                    }
+                ],
+                "instructor": "Dvin Titizian",
+                "location": "Classroom 204M Main Building"
+            },
+            "b5869cc0b5869cc0b5869cc0b5869cc0": {
+                "name": "Calculus 2",
+                "times": "MON 9:30am-10:20am, WED 9:30am-10:20am, FRI 9:30am-10:20am",
+                "timesFormatted": [
+                    {
+                        "weekday": "monday",
+                        "start": 570,
+                        "end": 620
+                    },
+                    {
+                        "weekday": "wednesday",
+                        "start": 570,
+                        "end": 620
+                    },
+                    {
+                        "weekday": "friday",
+                        "start": 570,
+                        "end": 620
+                    }
+                ],
+                "instructor": "Karen Keryan",
+                "location": "Classroom 414W Paramaz Avedissian Building"
+            },
+            "1e8fa2c21e8fa2c21e8fa2c21e8fa2c2": {
+                "name": "Linear Algebra",
+                "times": "MON 8:30am-9:20am, WED 8:30am-9:20am, FRI 8:30am-9:20am",
+                "timesFormatted": [
+                    {
+                        "weekday": "monday",
+                        "start": 510,
+                        "end": 560
+                    },
+                    {
+                        "weekday": "wednesday",
+                        "start": 510,
+                        "end": 560
+                    },
+                    {
+                        "weekday": "friday",
+                        "start": 510,
+                        "end": 560
+                    }
+                ],
+                "instructor": "Vahagn Mikayelyan",
+                "location": "Classroom 306E Paramaz Avedissian Building"
+            },
+            "729295e8729295e8729295e8729295e8": {
+                "name": "The Scientific Method & Critical Thinking",
+                "times": "MON 11:30am-12:20pm, WED 11:30am-12:20pm, FRI 11:30am-12:20pm",
+                "timesFormatted": [
+                    {
+                        "weekday": "monday",
+                        "start": 690,
+                        "end": 740
+                    },
+                    {
+                        "weekday": "wednesday",
+                        "start": 690,
+                        "end": 740
+                    },
+                    {
+                        "weekday": "friday",
+                        "start": 690,
+                        "end": 740
+                    }
+                ],
+                "instructor": "David B Davidian",
+                "location": "Classroom 113W Paramaz Avedissian Building"
+            },
+            "460bef30460bef30460bef30460bef30": {
+                "name": "Comparative Politics",
+                "times": "MON 10:30am-11:20am, WED 10:30am-11:20am, FRI 10:30am-11:20am",
+                "timesFormatted": [
+                    {
+                        "weekday": "monday",
+                        "start": 630,
+                        "end": 680
+                    },
+                    {
+                        "weekday": "wednesday",
+                        "start": 630,
+                        "end": 680
+                    },
+                    {
+                        "weekday": "friday",
+                        "start": 630,
+                        "end": 680
+                    }
+                ],
+                "instructor": "Yevgenya Paturyan",
+                "location": "Classroom 215E Paramaz Avedissian Building"
+            }
+        },
+        {},
+        {}
+    ]
+
 
     const AUA_BLUE = "#002147";
 
@@ -129,6 +305,75 @@
 
     // ========== HTML Generation and Manipulation Logic ==========
 
+    // This function enables small icon window when the main window is closed
+    function enableStickyClosedWindow() {
+        const sticky = document.createElement('div');
+        sticky.id = "sticky-window-aua-utils";
+        sticky.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        cursor: grab;
+        z-index: 9999;
+        user-select: none;
+    `;
+
+        const img = document.createElement('img');
+        img.src = 'https://aua.am/favicon.ico';
+        img.style.cssText = `
+        width: 100%;
+        height: 100%;
+    `;
+        img.draggable = false;
+        sticky.appendChild(img);
+        document.body.appendChild(sticky);
+
+        let isDragging = false;
+        let offsetX = 0;
+        let offsetY = 0;
+        let hasMoved = false; // track if element was moved
+
+        sticky.onmousedown = e => {
+            isDragging = true;
+            hasMoved = false;
+            const rect = sticky.getBoundingClientRect();
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+            sticky.style.cursor = 'grabbing';
+            e.preventDefault();
+        };
+
+        document.onmousemove = e => {
+            if (!isDragging) return;
+            const newLeft = e.clientX - offsetX;
+            const newTop = e.clientY - offsetY;
+            if (sticky.offsetLeft !== newLeft || sticky.offsetTop !== newTop) hasMoved = true;
+            sticky.style.left = `${newLeft}px`;
+            sticky.style.top = `${newTop}px`;
+        };
+
+        document.onmouseup = () => {
+            if (isDragging) sticky.style.cursor = 'grab';
+            isDragging = false;
+        };
+
+        sticky.onclick = () => {
+            if (!hasMoved) disableStickyClosedWindow();
+        };
+    }
+
+    // Disables sticky window
+    function disableStickyClosedWindow() {
+        const sticky = document.getElementById('sticky-window-aua-utils');
+        if (sticky) sticky.remove();
+
+        // Also showing main window
+        showMainWindow();
+    }
+
+
     // Here I decided to use one function to create the entire window to keep things organized
     // which is not done in gened-plugin.js.
     function createWindow() {
@@ -142,7 +387,7 @@
             top: 100px;
             right: 100px;
             height: auto;
-            max-height: 80vh;
+            max-height: 90vh;
             width: 300px;
             background: white;
             color: #fff;
@@ -255,6 +500,44 @@
         // Appending close button to header
         header.appendChild(closeButton);
 
+
+        // Calendar show hide button of header 
+        const calendarShowButton = document.createElement("div");
+        calendarShowButton.textContent = "";
+        calendarShowButton.title = "Show/Hide Calendar";
+        calendarShowButton.style.cssText = `
+            background-image: url("https://cdn-icons-png.flaticon.com/512/9926/9926396.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 25px 25px;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 24px;
+            height: 24px;
+            border: none;
+            color: #fff;
+            font-weight: bold;
+            font-size: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            line-height: 20px;
+            text-align: center;
+            padding: 0;
+            transition: 0.2s;
+        `;
+
+        // Adding event listeners to close button for hover effect and click action
+        calendarShowButton.addEventListener("mouseenter", () => {
+            calendarShowButton.style.opacity = "0.8";
+        });
+        calendarShowButton.addEventListener("mouseleave", () => {
+            calendarShowButton.style.opacity = "1";
+        });
+        calendarShowButton.addEventListener("click", () => switchScheduleVisibility());
+
+        // Appending close button to header
+        header.appendChild(calendarShowButton);
 
 
         // ----- Content Section -----
@@ -601,6 +884,91 @@
 
         // Call your function
         clearFiltersButton.addEventListener("click", () => clearFilters());
+
+
+        // ----- Schedule Section -----
+
+        // Title (dropdown toggle)
+        const scheduleTitle = document.createElement("div");
+        scheduleTitle.style.cssText = `
+            color: ${AUA_BLUE};
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        `;
+
+        const scheduleArrow = document.createElement("span");
+        scheduleArrow.textContent = "▸"; // closed by default
+        scheduleArrow.style.fontSize = "12px";
+
+        const scheduleTitleText = document.createElement("span");
+        scheduleTitleText.textContent = "Schedule";
+
+        scheduleTitle.appendChild(scheduleArrow);
+        scheduleTitle.appendChild(scheduleTitleText);
+        content.appendChild(scheduleTitle);
+
+        // Container
+        const scheduleContainer = document.createElement("div");
+        scheduleContainer.style.cssText = `
+            display: none; /* closed by default */
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px 12px;
+            margin-bottom: 10px;
+        `;
+        content.appendChild(scheduleContainer);
+
+        // Toggle logic
+        let scheduleVisible = false; // closed by default
+        scheduleTitle.addEventListener("click", () => {
+            scheduleVisible = !scheduleVisible;
+            scheduleContainer.style.display = scheduleVisible ? "grid" : "none";
+            scheduleArrow.textContent = scheduleVisible ? "▾" : "▸";
+        });
+
+        // helper: small subtitle
+        function createScheduleSubtitle(text) {
+            const el = document.createElement("div");
+            el.textContent = text;
+            el.style.cssText = `
+                color: ${AUA_BLUE};
+                font-weight: bold;
+                margin-top: 10px;
+                margin-bottom: 4px;
+                font-size: 14px;
+                user-select: none;
+            `;
+            return el;
+        }
+
+        // Only Schedule button part
+        scheduleContainer.appendChild(createScheduleSubtitle("Fits the schedule"));
+
+        const onlyScheduleLabel = document.createElement("label");
+        onlyScheduleLabel.style.cssText = `
+            grid-column: span 2;
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            cursor: pointer;
+            color: ${AUA_BLUE};
+        `;
+
+        const onlyScheduleCheckbox = document.createElement("input");
+        onlyScheduleCheckbox.type = "checkbox";
+        onlyScheduleCheckbox.id = "fits-schedule-checkbox";
+        onlyScheduleCheckbox.style.marginRight = "6px";
+        onlyScheduleCheckbox.addEventListener("change", highlightRows);
+
+        onlyScheduleLabel.appendChild(onlyScheduleCheckbox);
+        onlyScheduleLabel.appendChild(document.createTextNode("Show only courses that fit the schedule"));
+        scheduleContainer.appendChild(onlyScheduleLabel);
 
 
 
@@ -1164,17 +1532,17 @@
         // Clicking show only matches button for by default showing only matching courses
         !showOnly && document.getElementById("showOnlyButton")?.click();
 
-        // Highlighting rows after all is done
-        highlightRows();
-
-        // Stopping loading animation
-        stopLoadingAnimation();
-
         // Setupping all schedule things
         setupSchedule();
 
         // Calling some additional design things that must be applied before showing
         setupAdditionalDesign();
+
+        // Highlighting rows after all is done
+        highlightRows();
+
+        // Stopping loading animation
+        stopLoadingAnimation();
 
         // Allowing new fetches
         window.nowIsFetching = true;
@@ -1458,51 +1826,73 @@
         }
     }
 
+    // Function for showing window (when it is closed)
+    function showMainWindow() {
+        // Getting the window element
+        const win = document.getElementById("aua-courses-plugin-window");
+        if (win) {
+            win.style.display = "block";
+        }
+    }
+
     // Function for closing the plugin window
     function closeWindow() {
         // Getting the window element
         const win = document.getElementById("aua-courses-plugin-window");
-        if (win) win.remove();
+        if (win) {
+            win.style.display = "none";
+        }
 
-        // Creating notification element to notify that this is one time action and after
-        // refreshing it will still be enabled.
-        const notif = document.createElement("div");
-        notif.innerHTML = "⚠ Plugin not disabled! Disable it manually from the <b>Extension</b> or from <b>Tampermonkey</b>.";
-        notif.style.cssText = `
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-20px);
-            background: #fff3cd;
-            color: #856404;
-            padding: 10px 20px;
-            border-left: 5px solid #ffc107;
-            border-radius: 5px;
-            font-size: 14px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            opacity: 0;
-            transition: opacity 0.4s ease, transform 0.4s ease;
-            z-index: 9999;
-            max-width: 90%;
-            text-align: center;
-            font-family: sans-serif;
-        `;
+        // Checking if already notified not to notify
+        if (notificationShown === false) {
+            // Creating notification element to notify that this is one time action and after
+            // refreshing it will still be enabled.
+            const notif = document.createElement("div");
+            notif.innerHTML = "⚠ Plugin not disabled! Disable it manually from the <b>Extension</b> or from <b>Tampermonkey</b>.";
+            notif.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%) translateY(-20px);
+                background: #fff3cd;
+                color: #856404;
+                padding: 10px 20px;
+                border-left: 5px solid #ffc107;
+                border-radius: 5px;
+                font-size: 14px;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+                opacity: 0;
+                transition: opacity 0.4s ease, transform 0.4s ease;
+                z-index: 9999;
+                max-width: 90%;
+                text-align: center;
+                font-family: sans-serif;
+            `;
 
-        // Appending notification to body
-        document.body.appendChild(notif);
+            // Appending notification to body
+            document.body.appendChild(notif);
 
-        // Triggering animation
-        requestAnimationFrame(() => {
-            notif.style.opacity = "1";
-            notif.style.transform = "translateX(-50%) translateY(0)";
-        });
+            // Triggering animation
+            requestAnimationFrame(() => {
+                notif.style.opacity = "1";
+                notif.style.transform = "translateX(-50%) translateY(0)";
+            });
 
-        // Removing notification after 4 seconds
-        setTimeout(() => {
-            notif.style.opacity = "0";
-            notif.style.transform = "translateX(-50%) translateY(-20px)";
-            notif.addEventListener("transitionend", () => notif.remove());
-        }, 4000);
+            // Removing notification after 4 seconds
+            setTimeout(() => {
+                notif.style.opacity = "0";
+                notif.style.transform = "translateX(-50%) translateY(-20px)";
+                notif.addEventListener("transitionend", () => notif.remove());
+            }, 4000);
+
+
+            // Changing state 
+            notificationShown = true;
+
+        }
+
+        // Enabling sticky window
+        enableStickyClosedWindow();
     }
 
 
@@ -1546,21 +1936,21 @@
         highlightRows();
     }
 
+    // Function for making column with given index invisible
+    function makeColumnInvisible(index) {
+        document.querySelectorAll("table tr").forEach((row, rowIndex) => {
+            const cells = row.querySelectorAll("th, td"); // get both th and td
+            const cell = cells[index];
+            if (cell) cell.style.display = "none";
+        });
+
+    }
+
     // Function for additional design setup
     function setupAdditionalDesign() {
-        // Function for making column with given index invisible
-        function makeColumnInvisible(index) {
-            document.querySelectorAll("table tr").forEach((row, rowIndex) => {
-                const cells = row.querySelectorAll("th, td"); // get both th and td
-                const cell = cells[index];
-                if (cell) cell.style.display = "none";
-            });
-
-        }
 
         const table = document.getElementById('crsbysemester');
         const tableHeaders = table.querySelectorAll('th');
-
 
         // Iterating through headers to add them functionality for collapsing the column
         // useful for columns that are always empty
@@ -1573,37 +1963,18 @@
                 position: relative;
             `;
 
-            // Tooltip element
-            const tooltip = document.createElement("span");
-            tooltip.textContent = "Click to remove column";
-            tooltip.style.cssText = `
-                position: absolute;
-                bottom: 100%;
-                left: 50%;
-                transform: translateX(-50%);
-                background-color: #ff4d4d;
-                color: #fff;
-                padding: 2px 6px;
-                font-size: 12px;
-                border-radius: 3px;
-                white-space: nowrap;
-                opacity: 0;
-                pointer-events: none;
-                transition: opacity 0.2s;
-            `;
-            header.appendChild(tooltip);
+            // Adding instructions
+            header.title = "Click to remove column";
 
             // Hover effect
             header.addEventListener("mouseenter", () => {
                 header.style.backgroundColor = "#ff4d4d";
                 header.style.color = "#fff";
-                tooltip.style.opacity = "1";
             });
 
             header.addEventListener("mouseleave", () => {
                 header.style.backgroundColor = "";
                 header.style.color = "";
-                tooltip.style.opacity = "0";
             });
 
             // Click to remove column
@@ -1611,6 +1982,10 @@
                 makeColumnInvisible(index);
             };
         });
+
+        // By default remove 2 columns
+        makeColumnInvisible(9);
+        makeColumnInvisible(10);
 
     }
 
@@ -1707,6 +2082,9 @@
         // This checks if it is one time already formatted to not repeat the actions
         const rowIsFormatted = row.classList.contains("formatted-row");
 
+        // This array contains not clickable td indexes (like section or session)
+        const notClickableIndexes = [1, 2, 3, 8, 9, 10];
+
         // Applying first time
         if (rowIsFormatted === false) {
 
@@ -1749,7 +2127,15 @@
 
             // Getting text content and generating UNIQUE color for SAME strings 
             const text = target.textContent.trim();
-            const bgColor = stringToDistinctColor(text);
+            let bgColor;
+
+            // Making background color if it is clickable
+            if (notClickableIndexes.includes(index)) {
+                bgColor = "#e9e9e9ff";
+            }
+            else {
+                bgColor = stringToDistinctColor(text);
+            }
 
             // Aplying gened themes highlight
             const genedTd = row.querySelector(".is-gened-course");
@@ -1788,7 +2174,6 @@
                 }
             }
 
-
             // Applying styles that are onetime when row is never passed through this funciton
             if (rowIsFormatted === false) {
 
@@ -1809,33 +2194,36 @@
 
                 // Adding onclick event to filter the classes when user clicks to 
                 // specific data box (like if )
-                target.onclick = () => {
-                    // Getting text content of element
-                    const text = target.textContent.trim();
+                if (!notClickableIndexes.includes(index)) {
+                    target.onclick = () => {
+                        // Getting text content of element
+                        const text = target.textContent.trim();
 
-                    // Defining search input element because when clicked the text content
-                    // will be appended inside input's value
-                    const searchInputElement = document.getElementById("searchInput");
+                        // Defining search input element because when clicked the text content
+                        // will be appended inside input's value
+                        const searchInputElement = document.getElementById("searchInput");
 
-                    // If it already is included then we remove, otherwise we include
-                    if (searchInputElement.value.includes(text)) {
+                        // If it already is included then we remove, otherwise we include
+                        if (searchInputElement.value.includes(text)) {
 
-                        // Making search input value to get rid from that input that already contains
-                        searchInputElement.value =
+                            // Making search input value to get rid from that input that already contains
                             searchInputElement.value =
-                            searchInputElement.value
-                                .replaceAll(` "${text}" `, "")
-                                .replace(/\s+/g, " ")
-                                .trim();
-                    }
-                    else {
-                        // Appending the text content to searchInput for exact matching
-                        searchInputElement.value += ` "${text}" `;
-                    }
+                                searchInputElement.value =
+                                searchInputElement.value
+                                    .replaceAll(` "${text}" `, "")
+                                    .replace(/\s+/g, " ")
+                                    .trim();
+                        }
+                        else {
+                            // Appending the text content to searchInput for exact matching
+                            searchInputElement.value += ` "${text}" `;
+                        }
 
-                    // Finally calling filter function
-                    highlightRows();
-                };
+                        // Finally calling filter function
+                        highlightRows();
+                    };
+
+                }
 
                 // Formatting first td which is reponsible for course name (its so ugly)
                 if (index === 0) {
@@ -1858,16 +2246,25 @@
             // Making brighter if there is exact match
             let newText = text;
 
-            // Matching each keyword and putting it inside <mark> for higlighting
-            searchInputKeywords.forEach(keyword => {
-                const regex = new RegExp(`(?<!<mark[^>]*>)(` + keyword + `)(?![^<]*<\/mark>)`, "gi");
-                newText = newText.replace(regex, `<mark id="highlightMark" style="background-color: ${stringToDistinctColor(text)}; padding: 0px;">$1</mark>`);
-            });
+            // Changing cursor to default (and not pointer)
+            if (notClickableIndexes.includes(index)) {
+                target.style.cursor = "default";
+            }
 
-            // Changing the <td> background to brighter color
-            if (searchInputKeywords.some(k => text.toLowerCase().includes(k.toLowerCase()))) {
-                target.style.backgroundColor = `hsl(${stringToDistinctColor(text).match(/\d+/)[0]},100%,75%)`;
-                target.innerHTML = newText;
+            // If clickable doing search highlighting
+            if (!notClickableIndexes.includes(index)) {
+
+                // Matching each keyword and putting it inside <mark> for higlighting
+                searchInputKeywords.forEach(keyword => {
+                    const regex = new RegExp(`(?<!<mark[^>]*>)(` + keyword + `)(?![^<]*<\/mark>)`, "gi");
+                    newText = newText.replace(regex, `<mark id="highlightMark" style="background-color: ${stringToDistinctColor(text)}; padding: 0px;">$1</mark>`);
+                });
+
+                // Changing the <td> background to brighter color
+                if (searchInputKeywords.some(k => text.toLowerCase().includes(k.toLowerCase()))) {
+                    target.style.backgroundColor = `hsl(${stringToDistinctColor(text).match(/\d+/)[0]},100%,75%)`;
+                    target.innerHTML = newText;
+                }
             }
 
         });
@@ -2004,6 +2401,30 @@
         return true;
     }
 
+    // Function to get if current row matches for the schedule filter
+    function getScheduleMatch(row) {
+
+        // ----- Fits schedule -----
+
+        // Getting if only schedule option is checked or not
+        let fitsSchedule = document.getElementById("fits-schedule-checkbox");
+        if (fitsSchedule) { fitsSchedule = fitsSchedule.checked }
+
+        // Getting decision for only schedule option
+        const doesCourseFitSchedule = row.classList.contains("course-fits-schedule");
+        if (fitsSchedule) {
+            if (doesCourseFitSchedule) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        // Finally returning true
+        return true;
+    }
+
     // Function for highlighting rows based on search and filters
     function highlightRows(calledBy = null) {
         // Defining array for available times
@@ -2120,12 +2541,18 @@
 
 
 
+            // ----- Schedule Matching
+
+            // Defining scheduleMatch which is responsible for final decision of schedule part
+            let scheduleMatch = getScheduleMatch(row);
+
+
             // ----- Final Decision -----
 
             // I think its best to check if all three matches are true. Also if you think it would 
             // be useful you can add option to choose AND/OR logic between these three filters but idk,
             // it will make everything more complicated.
-            let finalMatch = searchMatches && (daysMatch && timesMatch) && genedMatch;
+            let finalMatch = searchMatches && (daysMatch && timesMatch) && genedMatch && scheduleMatch;
 
             // The actual logic if finalMatch has happened
             if (finalMatch) {
@@ -2174,8 +2601,10 @@
         });
 
 
-        // Scrolling to nearest matching row only if called not by time-filter
-        scrollToNearestMatching();
+        // Scrolling to nearest matching row only if show only matching is not true
+        if (!showOnly) {
+            scrollToNearestMatching();
+        }
 
         // After performing search
         availableTimes.sort();
@@ -4945,8 +5374,70 @@
         };
     }
 
+    // Function for making schedule visibility on or off
+    function switchScheduleVisibility() {
+        // Changing the opened state in data object
+        schedulesData.isScheduleOpened = !schedulesData.isScheduleOpened;
+
+        // Defining schedule container element to hide and show it
+        const scheduleContainerElement = document.getElementById("schedule-container");
+
+        // Hiding and showing it
+        scheduleContainerElement.style.display = schedulesData.isScheduleOpened ? "grid" : "none";
+
+        // Getting elements to change their style
+        const belowScheduleOpenerButton = document.getElementById("schedule-opener-id");
+
+        if (schedulesData.isScheduleOpened) {
+            belowScheduleOpenerButton.textContent = 'Hide Schedule';
+        }
+        else {
+            belowScheduleOpenerButton.textContent = 'Show My Schedule';
+        }
+
+        const offset = 200; // pixels from top
+        const top = belowScheduleOpenerButton.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: "smooth" });
+
+    }
+
+    // Function for setupping schedule opener
+    function setupScheduleOpener() {
+        // Finding position to add after
+        const scheduleToAddBefore = document.getElementById(`schedule-container`);
+        // const scheduleToAddBefore = document.querySelector(`.table-responsive`);
+
+        // Setupping button
+        const scheduleOpenerButton = document.createElement("div");
+        scheduleOpenerButton.id = 'schedule-opener-id';
+        scheduleOpenerButton.textContent = "Hide"
+        scheduleOpenerButton.style.cssText = `
+            width: 100%;
+            cursor: pointer;
+            height: auto;
+            text-align: center;
+            font-size: 21px;
+            color: white;
+            background-color: #88c4ecff;
+            margin-top: 15px;
+            padding: 7px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", Arial, sans-serif !important;
+        `
+
+        scheduleToAddBefore.before(scheduleOpenerButton)
+
+        scheduleOpenerButton.onclick = () => { switchScheduleVisibility() }
+    }
+
     // Function for setupping schedule window
     function setupScheduleWindow() {
+        // Checking if already exists then we need to exit
+        if (document.getElementById("schedule-container")) {
+            return;
+        }
+
         // Finding element to add before it our schedule section
         const tableToAddBefore = document.querySelector(`.table-responsive`);
 
@@ -4962,7 +5453,7 @@
             border: 1px solid #b1b1b1af;
             margin-bottom: 20px;
             display: grid;
-            grid-template-columns: 70% 30%;
+            grid-template-columns: 80% 20%;
         `;
         tableToAddBefore.before(scheduleContainer);
 
@@ -4971,9 +5462,8 @@
         scheduleCalendar.id = "schedule-calendar-container";
         scheduleCalendar.style.cssText = `
             display: grid;
-            grid-template-rows: 7% 93%;
+            grid-template-rows: 47px minmax(0, 1fr);
             width: 100%;
-            height: 100%;
             background-color: #F5F5F5;
         `;
 
@@ -4986,7 +5476,7 @@
         wishlistContainer.id = "wishlist-container";
         wishlistContainer.style.cssText = `
             display: grid;
-            grid-template-rows: 20% 80%;
+            grid-template-rows: 47px 1fr;
             width: 100%;
             height: 100%;
             background-color: #E0F7FA;
@@ -5019,8 +5509,9 @@
             flex-direction: row;
             width: 100%;
             height: 100%;
-            background-color: #f7c3c3ff;
+            background-color: #d8d8d8ff;
             overflow-x: auto;
+            align-items: center;
         `;
         schedulesTabContainer.appendChild(schedulesSwitchesContainer);
 
@@ -5028,10 +5519,17 @@
         const schedulesToolsContainer = document.createElement('div');
         schedulesToolsContainer.id = "schedules-tools-container";
         schedulesToolsContainer.style.cssText = `
-            display: block;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            overflow-x: auto;
+            overflow-y: hidden;
             width: 100%;
             height: 100%;
-            background-color: #d8f7c3ff;
+            justify-content: center;
+            background-color: #dbdbdb;
+            gap: 4px;
         `;
         schedulesTabContainer.appendChild(schedulesToolsContainer);
 
@@ -5041,35 +5539,49 @@
         exportButton.id = "export-button";
         exportButton.textContent = "Export";
         exportButton.style.cssText = `
-            display: block;
-            width: 80px;
-            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 24px;
             margin: 3px;
-            color: white;
-            background-color: #218b0bff;
+            color: #fff;
+            background: #747474ff;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
             cursor: pointer;
+            transition: background 0.2s;
         `;
+        exportButton.onmouseover = () => exportButton.style.background = '#535353ff';
+        exportButton.onmouseout = () => exportButton.style.background = '#747474ff';
         exportButton.onclick = () => { exportButtonFunctionality() };
         schedulesToolsContainer.appendChild(exportButton);
-
-
-
 
         // Adding import button
         const importButton = document.createElement('div');
         importButton.id = "import-button";
         importButton.textContent = "Import";
         importButton.style.cssText = `
-            display: block;
-            width: 80px;
-            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 24px;
             margin: 3px;
-            color: white;
-            background-color: #31921dff;
+            color: #fff;
+            background: #747474ff;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
             cursor: pointer;
+            transition: background 0.2s;
         `;
+        importButton.onmouseover = () => importButton.style.background = '#535353ff';
+        importButton.onmouseout = () => importButton.style.background = '#747474ff';
         importButton.onclick = () => { importButtonFunctionality() };
         schedulesToolsContainer.appendChild(importButton);
+
 
 
         // Creating schedulesTab where user can select one of the saved schedules
@@ -5078,10 +5590,12 @@
         activeSchedule.style.cssText = `
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
+            gap: 5px;
             width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
             height: auto;
-            background-color: #f0ff9cff;
+            background-color: #bfbfbf;
         `;
 
         // Adding active schedule to schedule calendar
@@ -5115,7 +5629,8 @@
                 classesContainer.style.cssText = `
                     flex: 1;
                     width: 100%;
-                    background-color: #ffffffaa; /* optional */
+                    border-radius: 5px;
+                    background-color: #ffffffa6; /* optional */
                 `;
 
                 // Append header and classes container to column
@@ -5124,6 +5639,12 @@
 
                 // Append day column to grid
                 container.appendChild(dayColumn);
+
+                // By default not showing the sunday because there must be no classes
+                if (day === "Sunday" || day === "Saturday") {
+                    dayColumn.style.display = "none";
+                    dayColumn.id = `column-${day.toLowerCase()}`;
+                }
             });
         })();
 
@@ -5134,14 +5655,32 @@
         const wishlistToolbar = document.createElement('div');
         wishlistToolbar.id = "wishlist-toolbar";
         wishlistToolbar.style.cssText = `
-            display: block;
             width: 100%;
             height: auto;
-            background-color: #9fff9cff;
+            background-color: #a1a1a1ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         `;
 
         // Adding to parent
         wishlistContainer.appendChild(wishlistToolbar);
+
+
+        // Creating text "Wishlist" for toolbar section (now there are no any tools yet)
+        const wishlistTitle = document.createElement('span');
+        wishlistTitle.id = "wishlist-title";
+        wishlistTitle.textContent = "Wishlist (?)"
+        wishlistTitle.style.cssText = `
+            display: block;
+            color: #e0e0e0ff;
+            font-size: 20px;
+        `;
+        wishlistTitle.title = "Here are stored the classes that you may add to your schedule."
+
+        // Adding to toolbar
+        wishlistToolbar.appendChild(wishlistTitle)
+
 
         // Creating wishlist courses container for adding courses there
         const wishlistCourses = document.createElement('div');
@@ -5150,11 +5689,14 @@
             display: block;
             width: 100%;
             height: auto;
-            background-color: #9cc7ffff;
+            background-color: #e7e7e7;
         `;
 
         // Adding to parent
         wishlistContainer.appendChild(wishlistCourses);
+
+        // Setupping scheudle opener button
+        setupScheduleOpener();
     }
 
     // Setup section name in thead
@@ -5177,21 +5719,30 @@
             const courseControllerTD = document.createElement('td');
             courseControllerTD.id = "course-controller-td";
             courseControllerTD.style.cssText = `
-                border: 1px solid rgb(0, 0, 0, 0.4);
+                border: 1px solid rgba(0, 0, 0, 0.3);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100px;
             `;
 
             // Adding controller for adding to schedule
             const courseAddButton = document.createElement('div');
             courseAddButton.id = `course-add-button`;
-
             courseAddButton.style.cssText = `
-                background-color: blue;
-                width: 30px;
-                height: 30px;
-                margin: 10px;
+                width: 28px;
+                height: 28px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 color: white;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                margin-right: 7px;
             `;
             courseAddButton.textContent = `+`;
+            courseAddButton.title = "Add course";
 
             // Adding button to td
             courseControllerTD.appendChild(courseAddButton);
@@ -5200,20 +5751,26 @@
             const courseSaveButton = document.createElement('div');
             courseSaveButton.id = `course-save-button`;
             courseSaveButton.style.cssText = `
-                background-color: blue;
-                width: 30px;
-                height: 30px;
-                margin: 10px;
+                width: 28px;
+                height: 28px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 color: white;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 20px;
             `;
-            courseSaveButton.textContent = `>`;
+            courseSaveButton.textContent = `♥`;
 
             // Adding button to td
             courseControllerTD.appendChild(courseSaveButton);
 
             // Adding td to row
             row.appendChild(courseControllerTD);
-        })
+        });
+
+
     }
 
     // Function for removing course from calendar
@@ -5221,8 +5778,14 @@
         // Removing course from schedules database
         delete schedulesData.schedules[schedulesData.activeScheduleIndex][id];
 
+        // Updating schedule controller buttons
+        updateCoursesSchedulerContainerButtons();
+
         // Reloading schedule
         loadSchedule(schedulesData.activeScheduleIndex);
+
+        // Reloading also highlighting
+        highlightRows();
     }
 
 
@@ -5230,6 +5793,9 @@
     function removeCourseFromWishlist(id) {
         // Removing course from wishlist database
         delete schedulesData.wishlist[id];
+
+        // Updating schedule controller buttons
+        updateCoursesSchedulerContainerButtons();
 
         // Reloading wishlist
         loadWishlist();
@@ -5255,10 +5821,45 @@
         updateCoursesSchedulerContainerButtons()
     }
 
+    // Function to get formatted course times for wishlist (to include all days and times)
+    function formatCourseTimesForWishlistCourse(times) {
+        const dayMap = {
+            monday: 'Mon',
+            tuesday: 'Tue',
+            wednesday: 'Wed',
+            thursday: 'Thu',
+            friday: 'Fri',
+            saturday: 'Sat',
+            sunday: 'Sun'
+        };
+
+        const toTime = m =>
+            String(Math.floor(m / 60)).padStart(2, '0') + ':' +
+            String(m % 60).padStart(2, '0');
+
+        const groups = {};
+
+        for (const t of times) {
+            const key = `${t.start}-${t.end}`;
+            if (!groups[key]) groups[key] = [];
+            groups[key].push(dayMap[t.weekday]);
+        }
+
+        return Object.entries(groups)
+            .map(([key, days]) => {
+                const [start, end] = key.split('-');
+                return `${days.join('/')} ${toTime(+start)}-${toTime(+end)}`;
+            })
+            .join(', ');
+    }
+
     // Function which generates a div for course in schedule
     function generateCourseDiv(id = null, formattedTime = null, forCalendar = true) {
         // Getting if there is row for that id
         const courseRow = document.querySelector(`.course-${id}`)
+
+        // Extracting course data from calendar
+        const extractedCourseData = extractCourseDataFromSchedules(id)
 
         // Creating main course div
         const courseDiv = document.createElement("div");
@@ -5268,109 +5869,240 @@
         // Trying to get old course formatted times
         let oldCourseFormattedTimes = (schedulesData.wishlist[id]) ? schedulesData.wishlist[id].timesFormatted : schedulesData.schedules[schedulesData.activeScheduleIndex][id].timesFormatted;
 
-        // If course with given id exists then
+        // Giving style to course
+        courseDiv.style.cssText = `
+            width: auto;
+            height: auto;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            position: relative;
+            max-width: 200px;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        `;
+
+        // If course with given id exists then it must be shown as disabled
         if (courseRow) {
+            // Making existing background color
+            courseDiv.style.backgroundColor = "#607D8B";
+            // courseDiv.style.backgroundColor = "#4caf4fdc";
 
-            // Giving style to course
-            courseDiv.style.cssText = `
-                width: auto;
-                height: auto;
-                background-color: #95d8c7ff;
-                margin: 10px;
-                padding: 10px;
-            `;
+        }
+        else {
+            // Making disabled background color
+            courseDiv.style.backgroundColor = "#757575";
+
+            // Making cursor to be ? and to show help text when hovered
+            courseDiv.style.cursor = "help";
+            courseDiv.title = "The following course doesn't exist anymore, it is removed or one of the parameters is modified.";
+        }
 
 
-            // Generating title for name of that class
-            const courseTitle = document.createElement("div");
-            courseTitle.style.cssText = `
+        // Generating title for name of that class
+        const courseTitle = document.createElement("div");
+        courseTitle.style.cssText = `
                color: white;
-               font-size: 10px; 
+               font-weight: bolder;
+               font-size: 15px; 
+               margin-bottom: 10px;
             `;
-            courseTitle.textContent = courseRow.children[indexes.indexOf("name")].textContent.split("(")[0];
+        courseTitle.textContent = courseRow?.children[indexes.indexOf("name")].textContent.split("(")[0] ?? extractedCourseData.name;
 
-            // Adding title to div
-            courseDiv.appendChild(courseTitle);
+        // Adding title to div
+        courseDiv.appendChild(courseTitle);
 
 
-            // Generating instructor name for that course
-            const courseInstructorName = document.createElement("div");
-            courseInstructorName.style.cssText = `
-               color: blue;
-               font-size: 10px; 
+        // Generating instructor name for that course
+        const courseInstructorName = document.createElement("div");
+        courseInstructorName.style.cssText = `
+            color: white;
+            font-size: 10px; 
+            font-weight: bold;
+            margin-bottom: 10px;
+        `;
+        courseInstructorName.textContent = courseRow?.children[indexes.indexOf("instructor")].textContent ?? extractedCourseData.instructor;
+
+        // Adding title to div
+        courseDiv.appendChild(courseInstructorName);
+
+
+        // Generating location for that course
+        const courseLocation = document.createElement("div");
+        courseLocation.style.cssText = `
+            color: white;
+            font-size: 10px;
+            margin-bottom: 10px;
+        `;
+        courseLocation.textContent = courseRow?.children[indexes.indexOf("location")].textContent ?? extractedCourseData.location;
+
+        // Adding title to div
+        courseDiv.appendChild(courseLocation);
+
+
+        // Generating times for that course
+
+        // Saving start and end in elements dataset
+        if (formattedTime) {
+            courseDiv.dataset.start = formattedTime.start;
+            courseDiv.dataset.end = formattedTime.end;
+        }
+
+
+        // Top time
+        const topTime = document.createElement("div");
+        topTime.textContent = `${formattedTime ? minutesToTime(formattedTime.start) : formatCourseTimesForWishlistCourse(oldCourseFormattedTimes)}`;
+        topTime.style.cssText = `
+                font-size: 14px;
+                margin-bottom: 10px;
+                font-weight: bold;
+                color: #f3f5bfff;
             `;
-            courseInstructorName.textContent = courseRow.children[indexes.indexOf("instructor")].textContent;
 
-            // Adding title to div
-            courseDiv.appendChild(courseInstructorName);
-
-
-            // Generating location for that course
-            const courseLocation = document.createElement("div");
-            courseLocation.style.cssText = `
-               color: pink;
-               font-size: 10px; 
-            `;
-            courseLocation.textContent = courseRow.children[indexes.indexOf("location")].textContent;
-
-            // Adding title to div
-            courseDiv.appendChild(courseLocation);
+        // Bottom time
+        const bottomTime = document.createElement("div");
+        bottomTime.textContent = `${formattedTime ? minutesToTime(formattedTime.end) : formatCourseTimesForWishlistCourse(oldCourseFormattedTimes)}`;
+        bottomTime.style.cssText = `
+                font-size: 14px;
+                font-weight: bold;
+                color: #f3f5bfff;
+                font-weight: bold;
 
 
-            // Generating times for that course
-
-            // Saving start and end in elements dataset
-            if (formattedTime) {
-                courseDiv.dataset.start = formattedTime.start;
-                courseDiv.dataset.end = formattedTime.end;
-            }
-
-            // Top time
-            const topTime = document.createElement("div");
-            topTime.textContent = `${formattedTime ? minutesToTime(formattedTime.start) : JSON.stringify(oldCourseFormattedTimes)}`;
-            topTime.style.cssText = `
-                font-size: 12px;
-                marginBottom: 4px;
             `;
 
-            // Bottom time
-            const bottomTime = document.createElement("div");
-            bottomTime.textContent = `${formattedTime ? minutesToTime(formattedTime.end) : JSON.stringify(oldCourseFormattedTimes)}`;
-            bottomTime.style.cssText = `
-                font-size: 12px;
-            `;
+        // Restore content in between
+        courseDiv.prepend(topTime);
+        courseDiv.appendChild(bottomTime);
 
-            // Restore content in between
-            courseDiv.prepend(topTime);
-            courseDiv.appendChild(bottomTime);
-
-            // Create remove button
-            const removeBtn = document.createElement("button");
-            removeBtn.textContent = "×"; // Minimalistic cross
-            removeBtn.style.cssText = `
+        // Create remove button
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "×";
+        removeBtn.style.cssText = `
                 border: none;
-                background: transparent;
-                color: #ff4d4d;
+                background-color: #ff4d4dcc;
+                color: #eeeeeeff;
+                font-size: 16px;
+                padding: 0px 5px 0px 5px;
+                border-radius: 3px;
+                cursor: pointer;
+                display: block;
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                transition: background-color 0.2s;
+            `;
+
+        // Remove parent courseDiv on click
+        if (forCalendar) {
+            removeBtn.addEventListener("click", (event) => {
+                // Prevent parent div click
+                event.stopPropagation();
+
+                removeCourseFromCalendar(id);
+            });
+
+            // Also add title for removing from calendar
+            removeBtn.title = "Delete course from calendar."
+        }
+        else {
+            removeBtn.addEventListener("click", (event) => {
+                // Prevent parent div click
+                event.stopPropagation();
+
+                removeCourseFromWishlist(id);
+            });
+
+            // Also add title for removing from wishlist
+            removeBtn.title = "Delete course from wishlist."
+        }
+
+        // Adding hover effect for highlighting all course divs that are same
+        removeBtn.onmouseover = () => {
+            removeBtn.style.backgroundColor = '#972b2bcc';
+        }
+
+        removeBtn.onmouseout = () => {
+            removeBtn.style.backgroundColor = '#ff4d4dcc';
+        };
+
+        // Add button to courseDiv
+        courseDiv.appendChild(removeBtn);
+
+        // Adding button for adding from wishlist to calendar
+        if (!forCalendar && courseRow && checkCourseCanBeAdded(id)) {
+            // Create remove button
+            const addFromWishlistToCalendarButton = document.createElement("button");
+            addFromWishlistToCalendarButton.title = "Add to schedule."
+            addFromWishlistToCalendarButton.textContent = "+"; // Minimalistic cross
+            addFromWishlistToCalendarButton.style.cssText = `
+                border: none;
+                background-color: #1bad7d;
+                border-radius: 5px;
+                color: #ffffffff;
                 font-size: 16px;
                 cursor: pointer;
                 margin-left: 8px;
+                text-align: center;
+                position: absolute;
+                bottom: 5px;
+                right: 5px;
             `;
 
-            // Remove parent courseDiv on click
-            if (forCalendar) {
-                removeBtn.addEventListener("click", () => {
-                    removeCourseFromCalendar(id);
-                });
-            }
-            else {
-                removeBtn.addEventListener("click", () => {
-                    removeCourseFromWishlist(id);
-                });
-            }
+            // Adding event listener
+            addFromWishlistToCalendarButton.addEventListener("click", (event) => {
+                // Prevent parent div click
+                event.stopPropagation();
+
+                // Adding course to calendar
+                addCourseToCalendar(id);
+            });
 
             // Add button to courseDiv
-            courseDiv.appendChild(removeBtn);
+            courseDiv.appendChild(addFromWishlistToCalendarButton);
+        }
 
+        // Adding hover effect for highlighting all course divs that are same
+        courseDiv.onmouseover = () => {
+            if (courseRow) {
+                const sameCourseElements = document.querySelectorAll(`#schedule-container .course-div-${id}`);
+                sameCourseElements.forEach(courseElement => {
+                    courseElement.style.backgroundColor = '#455b66ff';
+                });
+            }
+
+        };
+        courseDiv.onmouseout = () => {
+            if (courseRow) {
+                const sameCourseElements = document.querySelectorAll(`#schedule-container .course-div-${id}`);
+                sameCourseElements.forEach(courseElement => {
+                    courseElement.style.backgroundColor = '#607D8B';
+                });
+            }
+        };
+
+        // Adding click effect to search the course when clicked
+        courseDiv.onclick = () => {
+            if (courseRow) {
+                // Defining search input element
+                const searchInputElement = document.getElementById("searchInput");
+
+                // Getting search text
+                let searchText = "";
+                searchText += `"${courseRow?.children[indexes.indexOf("name")].textContent.split("(")[0] ?? extractedCourseData.name}" ` // Adding course name
+                searchText += `"${courseRow?.children[indexes.indexOf("instructor")].textContent ?? extractedCourseData.instructor}" ` // Adding instructor
+                searchText += `"${courseRow?.children[indexes.indexOf("location")].textContent ?? extractedCourseData.location}" ` // Adding location
+                searchText += `"${courseRow?.children[indexes.indexOf("times")].textContent ?? ""}" ` // Adding location
+
+                // Changing the value
+                searchInputElement.value = (searchInputElement.value === searchText) ? "" : searchText;
+
+                // Calling highlight rows
+                highlightRows();
+            }
         }
 
         // Returning the div
@@ -5571,6 +6303,9 @@
 
         // Reloading switches
         loadSchedulesSwitches();
+
+        // Reloading wishlist
+        loadWishlist();
     }
 
     // Function for clearing current calendar (only visual)
@@ -5600,15 +6335,72 @@
 
         // Finally loading the schedule
         loadSchedule(schedulesData.activeScheduleIndex);
+
+        // Reloading also highlighting
+        highlightRows();
     }
+
+    // This function extracts course data from saved schedules if it is unavailable or modified in jenzabar
+    function extractCourseDataFromSchedules(courseId) {
+        // This variable contains matching course
+        let matchingCourse = null;
+
+        // Finding in all schedules
+        schedulesData.schedules.forEach((schedule) => {
+            if (schedule[courseId]) {
+                matchingCourse = schedule[courseId]
+            }
+        })
+
+        // Finding in wishlist
+        for (const wishlistCourseId in schedulesData.wishlist) {
+            if (wishlistCourseId === courseId) {
+                matchingCourse = schedulesData.wishlist[courseId];
+            }
+        }
+
+        return matchingCourse;
+    }
+
+    // This function updates the visible days count
+    function updateGridColumnsByVisibleDivs() {
+        // 1. Hide columns if corresponding classes containers are empty
+        const saturdayClasses = document.getElementById("classes-saturday");
+        const sundayClasses = document.getElementById("classes-sunday");
+
+        const saturdayColumn = document.getElementById("column-saturday");
+        const sundayColumn = document.getElementById("column-sunday");
+
+        if (saturdayClasses && saturdayColumn && saturdayClasses.querySelectorAll("div").length === 0) {
+            saturdayColumn.style.display = "none";
+        }
+
+        if (sundayClasses && sundayColumn && sundayClasses.querySelectorAll("div").length === 0) {
+            sundayColumn.style.display = "none";
+        }
+
+        // 2. Update grid columns based on visible children
+        const container = document.getElementById("active-schedule-container");
+        const visibleCount = [...container.children]
+            .filter(el => el.style.display !== "none")
+            .length;
+
+        container.style.gridTemplateColumns = `repeat(${visibleCount}, 1fr)`;
+    }
+
+
+
 
     // Function for adding course to schedule calendar
     function addCourseToCalendarVisual(id) {
         // Getting if there is row for that id
         const courseRow = document.querySelector(`.course-${id}`)
 
+        // Extracting course data from calendar
+        const extractedCourseData = extractCourseDataFromSchedules(id)
+
         // Getting RAW content of time
-        const timeRAWContent = courseRow.children[indexes.indexOf('times')].textContent.trim();
+        const timeRAWContent = courseRow?.children[indexes.indexOf('times')].textContent.trim() ?? extractedCourseData.times;
 
         // Checking if time is available
         if (timeRAWContent.trim() === "TBD") { return false; }
@@ -5620,6 +6412,11 @@
         times.forEach((time) => {
             const weekdayDivToAdd = document.getElementById(`classes-${time["weekday"]}`)
             const courseDiv = generateCourseDiv(id, time);
+
+            // If time is sunday\
+            if (time["weekday"] === "sunday" || time["weekday"] === "saturday") {
+                document.getElementById(`column-${time["weekday"]}`).style.display = 'flex';
+            }
 
             // Trying to add the courseDiv in RIGHT position (in right times)
             for (const child of weekdayDivToAdd.children) {
@@ -5633,6 +6430,9 @@
             weekdayDivToAdd.appendChild(courseDiv);
 
         })
+
+        // Updating columns count (if saturday or sunday was added)
+        updateGridColumnsByVisibleDivs();
     }
 
     // Function for setupping gaps in calendar
@@ -5666,11 +6466,12 @@
                 // proportional height (e.g., 1px per minute)
                 const heightPx = gapMinutes; // adjust factor if needed
                 gapDiv.style.cssText = `
-            background-color: #f8d7da;
+            background-color: #FFCDD2;
             color: #721c24;
             text-align: center;
             margin: 10px;
-            padding: 0;
+            padding-top: 5px;
+            padding-bottom: 5px;
             border-radius: 4px;
             font-size: 12px;
             font-weight: bold;
@@ -5686,7 +6487,7 @@
     // Function for updating schedule controller buttons in each course
     function updateCoursesSchedulerContainerButtons() {
         // Getting all rows
-        const rows = getMatchingRows()
+        const rows = getRows()
 
         rows.forEach((row) => {
             const courseId = row.dataset.courseId;
@@ -5694,9 +6495,22 @@
             const saveButton = row.querySelector("#course-save-button");
             const addButton = row.querySelector("#course-add-button");
 
+            // Making cursor default (if it was not allowed)
+            addButton.style.cursor = "pointer";
+
+            // Clearing classlist fits data
+            row.classList.remove("course-fits-schedule")
+
             // Checking if already course is in schedule
             if (schedulesData.schedules[schedulesData.activeScheduleIndex][courseId]) {
-                addButton.style.backgroundColor = "red";
+                // Making - as button text
+                addButton.textContent = '-';
+
+                // Updating title info
+                addButton.title = 'Remove course from schedule';
+
+                // Changin background color
+                addButton.style.backgroundColor = "#b94545fa";
 
                 // Event listener for when clicked
                 addButton.onclick = () => {
@@ -5704,30 +6518,38 @@
                 }
             }
             else {
+                // Making + as button text
+                addButton.textContent = '+';
 
                 if (checkCourseCanBeAdded(courseId)) {
-                    addButton.style.backgroundColor = "green";
+                    addButton.style.backgroundColor = "#3e913eef";
+                    addButton.title = `Click to add the course to Schedule ${schedulesData.activeScheduleIndex + 1}`
 
                     // Event listener for when clicked
                     addButton.onclick = () => {
                         addCourseToCalendar(`${row.dataset.courseId}`);
                     }
+
+                    // Adding class to row for making clear that this course fits
+                    row.classList.add("course-fits-schedule")
+
                 }
                 else {
-                    addButton.style.backgroundColor = "gray";
+                    addButton.style.backgroundColor = "#cfceceff";
+                    addButton.style.cursor = "not-allowed";
+                    addButton.title = `This course doesn't fit in Schedule ${schedulesData.activeScheduleIndex + 1}`
 
                     // Event listener for when clicked
                     addButton.onclick = () => {
                     }
                 }
-
-
-
             }
 
             // Checking if already course is in wishlist
             if (schedulesData.wishlist[courseId]) {
-                saveButton.style.backgroundColor = "red";
+                saveButton.style.backgroundColor = "#ff0000";
+                saveButton.style.color = "#ffffff";
+                saveButton.title = "Remove from Wishlist";
 
                 // Event listener for when clicked
                 saveButton.onclick = () => {
@@ -5735,7 +6557,9 @@
                 }
             }
             else {
-                saveButton.style.backgroundColor = "green";
+                saveButton.style.backgroundColor = "#e4e4e4ff";
+                saveButton.style.color = "#ff0000";
+                saveButton.title = "Add to Wishlist";
 
                 // Event listener for when clicked
                 saveButton.onclick = () => {
@@ -5762,18 +6586,33 @@
             const scheduleSwitchElement = document.createElement('div');
             scheduleSwitchElement.style.cssText = `
                 min-width: 120px;
-                height: 80%;
                 padding: 5px;
+                max-height: 40%;
+                height: auto;
                 text-elign: center;
-                background-color: #75dcfcff;
+                background-color: #a7a6a6ff;
                 margin-left: 10px;
                 margin-right: 10px;
                 color: white;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.2s;
             `;
 
             // Highlighting the active one
             if (scheduleIndex === schedulesData.activeScheduleIndex) {
-                scheduleSwitchElement.style.backgroundColor = '#03ddcbff'
+                scheduleSwitchElement.style.backgroundColor = '#3f5688ff'
+            }
+
+            // Adding hover effect to schedule switch
+            if (scheduleIndex !== schedulesData.activeScheduleIndex) {
+                scheduleSwitchElement.onmouseover = () => {
+                    scheduleSwitchElement.style.backgroundColor = '#888686ff'; // darker red
+                };
+
+                scheduleSwitchElement.onmouseout = () => {
+                    scheduleSwitchElement.style.backgroundColor = '#a7a6a6ff'; // original red
+                };
             }
 
             // Text is just Schedule INDEX
@@ -5790,16 +6629,31 @@
 
             // Creating delete button for each schedule switch
             const scheduleSwitchDeleteButton = document.createElement('div');
-            scheduleSwitchDeleteButton.textContent = 'X';
+            scheduleSwitchDeleteButton.textContent = 'x';
+            scheduleSwitchDeleteButton.title = 'Delete this schedule.';
             scheduleSwitchDeleteButton.style.cssText = `
                 width: 20px;
                 height: 20px;
-                background-color: red;
+                background-color: #c74d4dff;
                 color: white;
                 position: relative;
+                text-align: center;
                 left: 100px;
-                bottom: 22px;
+                bottom: 19px;
+                border-radius: 3px;
+                cursor: pointer;
+                transition: background-color 0.3s;
             `;
+
+            // Adding hover effect to remove button
+            scheduleSwitchDeleteButton.onmouseover = () => {
+                scheduleSwitchDeleteButton.style.backgroundColor = '#a82f2fff'; // darker red
+            };
+
+            scheduleSwitchDeleteButton.onmouseout = () => {
+                scheduleSwitchDeleteButton.style.backgroundColor = '#c74d4dff'; // original red
+            };
+
 
             // Adding event when clicked
             scheduleSwitchDeleteButton.onclick = (e) => {
@@ -5829,11 +6683,25 @@
         const addNewSwitchButton = document.createElement('div')
         addNewSwitchButton.textContent = "+";
         addNewSwitchButton.style.cssText = `
-            background-color: #006effff;
+            background-color: #4470a8ff;
             color: white;
             font-size: 20px;
-            padding: 10px;
+            border-radius: 2px;
+            padding: 0px 6px 0px 6px;
+            height: auto;
+            cursor: pointer;
+            transition: background-color 0.3s;
         `;
+
+
+        // Adding hover effect to add new calendar button
+        addNewSwitchButton.onmouseover = () => {
+            addNewSwitchButton.style.backgroundColor = '#38649cff'; // darker
+        };
+
+        addNewSwitchButton.onmouseout = () => {
+            addNewSwitchButton.style.backgroundColor = '#4470a8ff'; // original
+        };
 
         // Adding event listener for creating new calendar
         addNewSwitchButton.onclick = () => {
@@ -6097,6 +6965,7 @@ END:VEVENT
 
     // Function for setupping all that schedule things
     function setupSchedule() {
+
         // Generating special id and making it as class for each course
         generateIdsForCourses();
 
@@ -6114,7 +6983,8 @@ END:VEVENT
 
         // Loading schedule first time
         loadSchedule();
+
+        // Loading wishlist first time
+        loadWishlist();
     }
-
-
 })();
