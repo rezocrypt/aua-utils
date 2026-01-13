@@ -29,191 +29,235 @@
     let checkedDays = [];
     let notificationShown = false;
 
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+            document.getElementById("searchInput").focus();
+        }
+    });
+
     const indexes = ["name", "section", "session", "credits", "campus", "instructor", "times", "seats", "spacesWaiting", "deliveryMethod", "distanceLearning", "location", "gened", "schedule"]
 
     const dayCheckboxes = {};
     const availableTimes = [];
     const timeCheckboxes = {};
 
-    let schedulesData = {
-        schedules: [{}, {}, {}],
-        wishlist: {},
-        activeScheduleIndex: 0,
-        isScheduleOpened: true
+    // let schedulesData = {
+    //     schedules: [{}, {}, {}],
+    //     wishlist: {},
+    //     activeScheduleIndex: 0,
+    //     isScheduleOpened: true
+    // }
+
+    // Defining storage
+    const storage = (typeof browser !== "undefined") ? browser.storage : chrome.storage;
+
+    // Define global variable
+    let schedulesData;
+
+    // First time getting (or setting if not set) the schedules data to persistant storage
+
+    (async () => {
+        console.log("Loading schedulesData from storage...");
+
+        const result = await storage.local.get("schedulesData");
+
+        if (!result.schedulesData) {
+            console.log("No schedulesData found. Creating default object...");
+            schedulesData = {
+                schedules: [{}, {}, {}],
+                wishlist: {},
+                activeScheduleIndex: 0,
+                isScheduleOpened: true
+            };
+            await storage.local.set({ schedulesData });
+            console.log("Default schedulesData saved:", schedulesData);
+        } else {
+            schedulesData = result.schedulesData;
+            console.log("Existing schedulesData loaded:", schedulesData);
+        }
+
+        // Example: debug current state
+        console.log("Current schedulesData:", schedulesData);
+    })();
+
+    // Function which saves data to local storage
+    function saveToStorage() {
+        storage.local.set({ schedulesData });
     }
 
-    schedulesData.wishlist = {
-        "b5869cc0b5869cc0b5869cac0b5869cc0": {
-            "name": "Calculus 2",
-            "times": "MON 9:30am-10:20am, WED 9:30am-10:20am, FRI 9:30am-10:20am",
-            "timesFormatted": [
-                {
-                    "weekday": "monday",
-                    "start": 570,
-                    "end": 620
-                },
-                {
-                    "weekday": "wednesday",
-                    "start": 570,
-                    "end": 620
-                },
-                {
-                    "weekday": "friday",
-                    "start": 570,
-                    "end": 620
-                }
-            ],
-            "instructor": "Karen Keryan",
-            "location": "Classroom 414W Paramaz Avedissian Building"
-        },
-    }
-    schedulesData.schedules = [
-        {
-            "99fcbe6b99fcbe6b99fcbe6b99fcbe6b": {
-                "name": "Mechanics",
-                "times": "TUE 1:30pm-2:50pm, THU 1:30pm-2:50pm",
-                "timesFormatted": [
-                    {
-                        "weekday": "tuesday",
-                        "start": 810,
-                        "end": 890
-                    },
-                    {
-                        "weekday": "thursday",
-                        "start": 810,
-                        "end": 890
-                    }
-                ],
-                "instructor": "Hrachya Kocharyan",
-                "location": "Classroom 413W Paramaz Avedissian Building"
-            },
-            "19a511e819a511e819a511e819a511e8": {
-                "name": "Mechanics Lab",
-                "times": "TUE 10:30am-11:50am",
-                "timesFormatted": [
-                    {
-                        "weekday": "tuesday",
-                        "start": 630,
-                        "end": 710
-                    }
-                ],
-                "instructor": "Bilor Kurghinyan",
-                "location": "Physics Lab Main Building"
-            },
-            "4d1a08b34d1a08b34d1a08b34d1a08b3": {
-                "name": "Freshman Seminar 2",
-                "times": "TUE 9:00am-10:20am, THU 9:00am-10:20am",
-                "timesFormatted": [
-                    {
-                        "weekday": "tuesday",
-                        "start": 540,
-                        "end": 620
-                    },
-                    {
-                        "weekday": "thursday",
-                        "start": 540,
-                        "end": 620
-                    }
-                ],
-                "instructor": "Dvin Titizian",
-                "location": "Classroom 204M Main Building"
-            },
-            "b5869cc0b5869cc0b5869cc0b5869cc0": {
-                "name": "Calculus 2",
-                "times": "MON 9:30am-10:20am, WED 9:30am-10:20am, FRI 9:30am-10:20am",
-                "timesFormatted": [
-                    {
-                        "weekday": "monday",
-                        "start": 570,
-                        "end": 620
-                    },
-                    {
-                        "weekday": "wednesday",
-                        "start": 570,
-                        "end": 620
-                    },
-                    {
-                        "weekday": "friday",
-                        "start": 570,
-                        "end": 620
-                    }
-                ],
-                "instructor": "Karen Keryan",
-                "location": "Classroom 414W Paramaz Avedissian Building"
-            },
-            "1e8fa2c21e8fa2c21e8fa2c21e8fa2c2": {
-                "name": "Linear Algebra",
-                "times": "MON 8:30am-9:20am, WED 8:30am-9:20am, FRI 8:30am-9:20am",
-                "timesFormatted": [
-                    {
-                        "weekday": "monday",
-                        "start": 510,
-                        "end": 560
-                    },
-                    {
-                        "weekday": "wednesday",
-                        "start": 510,
-                        "end": 560
-                    },
-                    {
-                        "weekday": "friday",
-                        "start": 510,
-                        "end": 560
-                    }
-                ],
-                "instructor": "Vahagn Mikayelyan",
-                "location": "Classroom 306E Paramaz Avedissian Building"
-            },
-            "729295e8729295e8729295e8729295e8": {
-                "name": "The Scientific Method & Critical Thinking",
-                "times": "MON 11:30am-12:20pm, WED 11:30am-12:20pm, FRI 11:30am-12:20pm",
-                "timesFormatted": [
-                    {
-                        "weekday": "monday",
-                        "start": 690,
-                        "end": 740
-                    },
-                    {
-                        "weekday": "wednesday",
-                        "start": 690,
-                        "end": 740
-                    },
-                    {
-                        "weekday": "friday",
-                        "start": 690,
-                        "end": 740
-                    }
-                ],
-                "instructor": "David B Davidian",
-                "location": "Classroom 113W Paramaz Avedissian Building"
-            },
-            "460bef30460bef30460bef30460bef30": {
-                "name": "Comparative Politics",
-                "times": "MON 10:30am-11:20am, WED 10:30am-11:20am, FRI 10:30am-11:20am",
-                "timesFormatted": [
-                    {
-                        "weekday": "monday",
-                        "start": 630,
-                        "end": 680
-                    },
-                    {
-                        "weekday": "wednesday",
-                        "start": 630,
-                        "end": 680
-                    },
-                    {
-                        "weekday": "friday",
-                        "start": 630,
-                        "end": 680
-                    }
-                ],
-                "instructor": "Yevgenya Paturyan",
-                "location": "Classroom 215E Paramaz Avedissian Building"
-            }
-        },
-        {},
-        {}
-    ]
+
+    // schedulesData.wishlist = {
+    //     "b5869cc0b5869cc0b5869cac0b5869cc0": {
+    //         "name": "Calculus 2",
+    //         "times": "MON 9:30am-10:20am, WED 9:30am-10:20am, FRI 9:30am-10:20am",
+    //         "timesFormatted": [
+    //             {
+    //                 "weekday": "monday",
+    //                 "start": 570,
+    //                 "end": 620
+    //             },
+    //             {
+    //                 "weekday": "wednesday",
+    //                 "start": 570,
+    //                 "end": 620
+    //             },
+    //             {
+    //                 "weekday": "friday",
+    //                 "start": 570,
+    //                 "end": 620
+    //             }
+    //         ],
+    //         "instructor": "Karen Keryan",
+    //         "location": "Classroom 414W Paramaz Avedissian Building"
+    //     },
+    // }
+    // schedulesData.schedules = [
+    //     {
+    //         "99fcbe6b99fcbe6b99fcbe6b99fcbe6b": {
+    //             "name": "Mechanics",
+    //             "times": "TUE 1:30pm-2:50pm, THU 1:30pm-2:50pm",
+    //             "timesFormatted": [
+    //                 {
+    //                     "weekday": "tuesday",
+    //                     "start": 810,
+    //                     "end": 890
+    //                 },
+    //                 {
+    //                     "weekday": "thursday",
+    //                     "start": 810,
+    //                     "end": 890
+    //                 }
+    //             ],
+    //             "instructor": "Hrachya Kocharyan",
+    //             "location": "Classroom 413W Paramaz Avedissian Building"
+    //         },
+    //         "19a511e819a511e819a511e819a511e8": {
+    //             "name": "Mechanics Lab",
+    //             "times": "TUE 10:30am-11:50am",
+    //             "timesFormatted": [
+    //                 {
+    //                     "weekday": "tuesday",
+    //                     "start": 630,
+    //                     "end": 710
+    //                 }
+    //             ],
+    //             "instructor": "Bilor Kurghinyan",
+    //             "location": "Physics Lab Main Building"
+    //         },
+    //         "4d1a08b34d1a08b34d1a08b34d1a08b3": {
+    //             "name": "Freshman Seminar 2",
+    //             "times": "TUE 9:00am-10:20am, THU 9:00am-10:20am",
+    //             "timesFormatted": [
+    //                 {
+    //                     "weekday": "tuesday",
+    //                     "start": 540,
+    //                     "end": 620
+    //                 },
+    //                 {
+    //                     "weekday": "thursday",
+    //                     "start": 540,
+    //                     "end": 620
+    //                 }
+    //             ],
+    //             "instructor": "Dvin Titizian",
+    //             "location": "Classroom 204M Main Building"
+    //         },
+    //         "b5869cc0b5869cc0b5869cc0b5869cc0": {
+    //             "name": "Calculus 2",
+    //             "times": "MON 9:30am-10:20am, WED 9:30am-10:20am, FRI 9:30am-10:20am",
+    //             "timesFormatted": [
+    //                 {
+    //                     "weekday": "monday",
+    //                     "start": 570,
+    //                     "end": 620
+    //                 },
+    //                 {
+    //                     "weekday": "wednesday",
+    //                     "start": 570,
+    //                     "end": 620
+    //                 },
+    //                 {
+    //                     "weekday": "friday",
+    //                     "start": 570,
+    //                     "end": 620
+    //                 }
+    //             ],
+    //             "instructor": "Karen Keryan",
+    //             "location": "Classroom 414W Paramaz Avedissian Building"
+    //         },
+    //         "1e8fa2c21e8fa2c21e8fa2c21e8fa2c2": {
+    //             "name": "Linear Algebra",
+    //             "times": "MON 8:30am-9:20am, WED 8:30am-9:20am, FRI 8:30am-9:20am",
+    //             "timesFormatted": [
+    //                 {
+    //                     "weekday": "monday",
+    //                     "start": 510,
+    //                     "end": 560
+    //                 },
+    //                 {
+    //                     "weekday": "wednesday",
+    //                     "start": 510,
+    //                     "end": 560
+    //                 },
+    //                 {
+    //                     "weekday": "friday",
+    //                     "start": 510,
+    //                     "end": 560
+    //                 }
+    //             ],
+    //             "instructor": "Vahagn Mikayelyan",
+    //             "location": "Classroom 306E Paramaz Avedissian Building"
+    //         },
+    //         "729295e8729295e8729295e8729295e8": {
+    //             "name": "The Scientific Method & Critical Thinking",
+    //             "times": "MON 11:30am-12:20pm, WED 11:30am-12:20pm, FRI 11:30am-12:20pm",
+    //             "timesFormatted": [
+    //                 {
+    //                     "weekday": "monday",
+    //                     "start": 690,
+    //                     "end": 740
+    //                 },
+    //                 {
+    //                     "weekday": "wednesday",
+    //                     "start": 690,
+    //                     "end": 740
+    //                 },
+    //                 {
+    //                     "weekday": "friday",
+    //                     "start": 690,
+    //                     "end": 740
+    //                 }
+    //             ],
+    //             "instructor": "David B Davidian",
+    //             "location": "Classroom 113W Paramaz Avedissian Building"
+    //         },
+    //         "460bef30460bef30460bef30460bef30": {
+    //             "name": "Comparative Politics",
+    //             "times": "MON 10:30am-11:20am, WED 10:30am-11:20am, FRI 10:30am-11:20am",
+    //             "timesFormatted": [
+    //                 {
+    //                     "weekday": "monday",
+    //                     "start": 630,
+    //                     "end": 680
+    //                 },
+    //                 {
+    //                     "weekday": "wednesday",
+    //                     "start": 630,
+    //                     "end": 680
+    //                 },
+    //                 {
+    //                     "weekday": "friday",
+    //                     "start": 630,
+    //                     "end": 680
+    //                 }
+    //             ],
+    //             "instructor": "Yevgenya Paturyan",
+    //             "location": "Classroom 215E Paramaz Avedissian Building"
+    //         }
+    //     },
+    //     {},
+    //     {}
+    // ]
 
 
     const AUA_BLUE = "#002147";
@@ -310,22 +354,34 @@
         const sticky = document.createElement('div');
         sticky.id = "sticky-window-aua-utils";
         sticky.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 40px;
-        height: 40px;
-        cursor: grab;
-        z-index: 9999;
-        user-select: none;
-    `;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #cbc7c7;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            border: 1px solid rgba(216, 216, 216, 0.67)00;
+            cursor: pointer;
+            z-index: 9999;
+            user-select: none;
+            transition: transform 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+        `;
+
+        sticky.title = 'Open main window'; // tooltip
 
         const img = document.createElement('img');
         img.src = 'https://raw.githubusercontent.com/rezocrypt/aua-utils/refs/heads/main/resources/logos/logo.png';
         img.style.cssText = `
-        width: 100%;
-        height: 100%;
-    `;
+            width: 85%;
+            height: 85%;
+            pointer-events: none;
+        `;
         img.draggable = false;
         sticky.appendChild(img);
         document.body.appendChild(sticky);
@@ -333,8 +389,9 @@
         let isDragging = false;
         let offsetX = 0;
         let offsetY = 0;
-        let hasMoved = false; // track if element was moved
+        let hasMoved = false;
 
+        // Drag logic
         sticky.onmousedown = e => {
             isDragging = true;
             hasMoved = false;
@@ -355,13 +412,18 @@
         };
 
         document.onmouseup = () => {
-            if (isDragging) sticky.style.cursor = 'grab';
+            if (isDragging) sticky.style.cursor = 'pointer';
             isDragging = false;
         };
 
+        // Click logic
         sticky.onclick = () => {
             if (!hasMoved) disableStickyClosedWindow();
         };
+
+        // Hover feedback
+        sticky.onmouseenter = () => sticky.style.transform = 'scale(1.1)';
+        sticky.onmouseleave = () => sticky.style.transform = 'scale(1)';
     }
 
     // Disables sticky window
@@ -429,8 +491,8 @@
         const image = document.createElement("img");
         image.src = "https://raw.githubusercontent.com/rezocrypt/aua-utils/refs/heads/main/resources/logos/logo.png";
         image.style.cssText = `
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
         `;
         imageContainer.appendChild(image);
 
@@ -1532,17 +1594,17 @@
         // Clicking show only matches button for by default showing only matching courses
         !showOnly && document.getElementById("showOnlyButton")?.click();
 
-        // Setupping all schedule things
-        setupSchedule();
-
-        // Calling some additional design things that must be applied before showing
-        setupAdditionalDesign();
-
         // Highlighting rows after all is done
         highlightRows();
 
+        // Setupping all schedule things
+        setupSchedule();
+
         // Stopping loading animation
         stopLoadingAnimation();
+
+        // Calling some additional design things that must be applied before showing
+        setupAdditionalDesign();
 
         // Allowing new fetches
         window.nowIsFetching = true;
@@ -1918,7 +1980,7 @@
         updateCheckedWeekdays();
 
 
-        // // Clear Geneds
+        // Clear Geneds
 
         // Resetting only gened and class upper and lower level
         document.getElementById("only-gened-checkbox").checked = false;
@@ -1930,6 +1992,9 @@
             const themeCheckbox = document.getElementById(`gened-theme-${i}-checkbox`);
             themeCheckbox.checked = false;
         }
+
+        // Clear calendar only fitting classe filter
+        document.getElementById("fits-schedule-checkbox").checked = false;
 
 
         // Highlight rows again
@@ -2147,10 +2212,10 @@
                 // Checking and applying new style for title
                 if (genedSpanElement) {
                     if (onlyGenedValue) {
-                        genedSpanElement.style.backgroundColor = "#00ff22ff";
+                        genedSpanElement.style.backgroundColor = "#2e9c78ff";
                     }
                     else {
-                        genedSpanElement.style.backgroundColor = "#a8e9b1ff";
+                        genedSpanElement.style.backgroundColor = "#41af8b";
                     }
                 }
 
@@ -5000,14 +5065,21 @@
                     genedTd.id = "gened-td";
                     genedTd.classList.add("is-gened-course");
 
+                    // Some style to td element
+                    genedTd.style.cssText = `
+                        text-align: center;
+                        max-width: 150px;
+                    `;;
 
                     // Creating span for title that it is gened
                     const genedSpan = document.createElement("span");
                     genedSpan.classList.add("gened-title-span");
                     genedSpan.style.cssText = `
                         text-align: center;
-                        font-size: 1.3em;
-                        padding: 2px 8px 2px 8px;
+                        font-size: 15px;
+                        color: white;
+                        padding: 5px;
+                        font-family: sans-serif;
                         margin-bottom: 10px;
                         border-radius: 5px;
                         width: auto;
@@ -5022,7 +5094,7 @@
                         onlyGenedCheckbox.dispatchEvent(new Event("change", { bubbles: true }));
                     }
 
-                    genedSpan.textContent = "Gened";
+                    genedSpan.textContent = "Gened (?)";
                     genedSpan.title = `${gened.name}\n\nCourse number: ${gened.courseNumber} \nCode: ${gened.code} \nThemes: ${gened.themes}\n\nDouble-check—computers can’t be correct about everything, according to Gödel’s theorem.`;
 
                     // Appending elements to <td>
@@ -5033,7 +5105,8 @@
                     const genedCourseNumberSpan = document.createElement("span");
                     genedCourseNumberSpan.classList.add("gened-course-number-span")
                     genedCourseNumberSpan.style.cssText = `
-                        background-color: #f5bb79cc;
+                        background-color: #e9e9e9;
+                        border: 1px solid rgba(0, 0, 0, 0.1);
                         padding: 2px 8px 2px 8px;
                         margin-bottom: 10px;
                         border-radius: 5px;
@@ -5052,7 +5125,8 @@
                     const genedCodeSpan = document.createElement("span");
                     genedCodeSpan.classList.add("gened-course-code-span")
                     genedCodeSpan.style.cssText = `
-                        background-color: #f5bb79cc;
+                        background-color: #e9e9e9;
+                        border: 1px solid rgba(0, 0, 0, 0.1);
                         padding: 2px 8px 2px 8px;
                         margin-bottom: 10px;
                         border-radius: 5px;
@@ -5076,14 +5150,18 @@
                             themeElement.style.cssText = `
                                 background-color: #efcff6;
                                 padding: 2px 6px 2px 6px;
+                                border-radius: 2px;
                                 margin-left: 2px;
                                 margin-right: 2px;
                                 display: inline;
                                 cursor: pointer;
+                                border: 1px solid rgba(0, 0, 0, 0.1);
                             `;
                             themeElement.classList.add('gened-course-theme-number')
                             themeElement.classList.add(`gened-course-theme-${theme}-number`)
 
+                            // Adding title
+                            themeElement.title = `Filter Geneds that contain Theme ${theme}`
 
                             // Triggering checkbox click when some theme is selected
                             themeElement.onclick = () => {
@@ -5119,24 +5197,32 @@
                 genedTd.id = "gened-td";
                 genedTd.classList.add("is-not-gened-course");
 
+                // Some style to td element
+                genedTd.style.cssText = `
+                    text-align: center;
+                    max-width: 150px;
+                `;;
+
 
                 // Creating span for title that it is gened
                 const genedSpan = document.createElement("span");
                 genedSpan.classList.add("gened-title-span");
                 genedSpan.style.cssText = `
                         text-align: center;
-                        background-color: #e98585ff;
-                        font-size: 1.3em;
-                        padding: 2px 8px 2px 8px;
+                        background-color: #d34646d6;
+                        font-size: 14px;
+                        padding: 5px;
+                        color: white;
                         margin-bottom: 10px;
                         border-radius: 5px;
                         width: auto;
                         display: box;
                         cursor: help;
-                    `
+                        font-family: sans-serif;
+                `;
 
 
-                genedSpan.textContent = "Not Gened";
+                genedSpan.textContent = "Not Gened (?)";
                 genedSpan.title = `Double-check—computers can’t be correct about everything, according to Gödel’s theorem.`;
 
                 // Appending elements to <td>
@@ -5256,7 +5342,6 @@
         left: 100px;
         width: 320px;
         background: #fff;
-        border: 1px solid rgba(0,0,0,0.15);
         border-radius: 10px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         z-index: 9999;
@@ -5268,10 +5353,10 @@
         header.style.cssText = `
         display: flex;
         justify-content: space-between;
+        background-color: #4f6c7aff;
         align-items: center;
         padding: 10px 12px;
         cursor: move;
-        border-bottom: 1px solid rgba(0,0,0,0.1);
         user-select: none;
     `;
 
@@ -5281,6 +5366,7 @@
         title.style.cssText = `
         font-size: 14px;
         font-weight: 600;
+        color: white;
     `;
 
         // Close button
@@ -5290,19 +5376,20 @@
         background: none;
         border: none;
         font-size: 16px;
+        color: white;
         cursor: pointer;
         opacity: 0.6;
         border-radius: 4px;
         padding: 2px 6px;
     `;
         closeBtn.onmouseenter = () => {
-            closeBtn.style.background = "rgba(255,0,0,0.12)";
-            closeBtn.style.color = "#b00000";
+            closeBtn.style.background = "rgba(255, 0, 0, 0.25)";
+            closeBtn.style.color = "#ffffffff";
             closeBtn.style.opacity = "1";
         };
         closeBtn.onmouseleave = () => {
             closeBtn.style.background = "none";
-            closeBtn.style.color = "inherit";
+            closeBtn.style.color = "white";
             closeBtn.style.opacity = "0.6";
         };
         closeBtn.onclick = () => overlay.remove();
@@ -5316,6 +5403,7 @@
         padding: 14px;
         display: flex;
         gap: 10px;
+        background-color: #607d8b;
     `;
 
         // Helper to create option buttons
@@ -5333,7 +5421,7 @@
             transition: background 0.15s ease;
         `;
             btn.onmouseenter = () => {
-                btn.style.background = "rgba(0,0,0,0.05)";
+                btn.style.background = "rgba(197, 197, 197, 1)";
             };
             btn.onmouseleave = () => {
                 btn.style.background = "#f9f9f9";
@@ -5374,11 +5462,8 @@
         };
     }
 
-    // Function for making schedule visibility on or off
-    function switchScheduleVisibility() {
-        // Changing the opened state in data object
-        schedulesData.isScheduleOpened = !schedulesData.isScheduleOpened;
-
+    // Applies schedule visibility styles
+    function applyScheduleVisibility() {
         // Defining schedule container element to hide and show it
         const scheduleContainerElement = document.getElementById("schedule-container");
 
@@ -5395,10 +5480,22 @@
             belowScheduleOpenerButton.textContent = 'Show My Schedule';
         }
 
+        // Scrolling
         const offset = 200; // pixels from top
         const top = belowScheduleOpenerButton.getBoundingClientRect().top + window.scrollY - offset;
         window.scrollTo({ top, behavior: "smooth" });
 
+        // Saving
+        saveToStorage();
+    }
+
+    // Function for making schedule visibility on or off
+    function switchScheduleVisibility() {
+        // Changing the opened state in data object
+        schedulesData.isScheduleOpened = !schedulesData.isScheduleOpened;
+
+        // Applying
+        applyScheduleVisibility();
     }
 
     // Function for setupping schedule opener
@@ -5410,7 +5507,7 @@
         // Setupping button
         const scheduleOpenerButton = document.createElement("div");
         scheduleOpenerButton.id = 'schedule-opener-id';
-        scheduleOpenerButton.textContent = "Hide"
+        scheduleOpenerButton.textContent = "Hide Schedule"
         scheduleOpenerButton.style.cssText = `
             width: 100%;
             cursor: pointer;
@@ -5418,7 +5515,7 @@
             text-align: center;
             font-size: 21px;
             color: white;
-            background-color: #88c4ecff;
+            background-color: #607d8b;
             margin-top: 15px;
             padding: 7px;
             margin-bottom: 15px;
@@ -5451,9 +5548,11 @@
             min-height: 60vh;
             background-color: #ffffffff;
             border: 1px solid #b1b1b1af;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+            border-radius: 4px;
             margin-bottom: 20px;
             display: grid;
-            grid-template-columns: 80% 20%;
+            grid-template-columns: 70% 30%;
         `;
         tableToAddBefore.before(scheduleContainer);
 
@@ -5546,15 +5645,15 @@
             height: 24px;
             margin: 3px;
             color: #fff;
-            background: #747474ff;
+            background: #607d8b;
             border-radius: 4px;
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             transition: background 0.2s;
         `;
-        exportButton.onmouseover = () => exportButton.style.background = '#535353ff';
-        exportButton.onmouseout = () => exportButton.style.background = '#747474ff';
+        exportButton.onmouseover = () => exportButton.style.background = '#4b6877ff';
+        exportButton.onmouseout = () => exportButton.style.background = '#607d8b';
         exportButton.onclick = () => { exportButtonFunctionality() };
         schedulesToolsContainer.appendChild(exportButton);
 
@@ -5570,15 +5669,15 @@
             height: 24px;
             margin: 3px;
             color: #fff;
-            background: #747474ff;
+            background: #607d8b;
             border-radius: 4px;
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             transition: background 0.2s;
         `;
-        importButton.onmouseover = () => importButton.style.background = '#535353ff';
-        importButton.onmouseout = () => importButton.style.background = '#747474ff';
+        importButton.onmouseover = () => importButton.style.background = '#4b6877ff';
+        importButton.onmouseout = () => importButton.style.background = '#607d8b';
         importButton.onclick = () => { importButtonFunctionality() };
         schedulesToolsContainer.appendChild(importButton);
 
@@ -5595,7 +5694,9 @@
             box-sizing: border-box;
             padding: 10px;
             height: auto;
-            background-color: #bfbfbf;
+            background-color: #607d8b;
+            max-height: 800px;
+            overflow: auto;
         `;
 
         // Adding active schedule to schedule calendar
@@ -5621,6 +5722,7 @@
                 dayHeader.style.cssText = `
                     font-weight: bold;
                     margin-bottom: 4px;
+                    color: white;
                 `;
 
                 // Container for classes under this weekday
@@ -5630,7 +5732,7 @@
                     flex: 1;
                     width: 100%;
                     border-radius: 5px;
-                    background-color: #ffffffa6; /* optional */
+                    background-color: #ffffffa6;
                 `;
 
                 // Append header and classes container to column
@@ -5657,7 +5759,7 @@
         wishlistToolbar.style.cssText = `
             width: 100%;
             height: auto;
-            background-color: #a1a1a1ff;
+            background-color: #607d8b;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -5686,10 +5788,17 @@
         const wishlistCourses = document.createElement('div');
         wishlistCourses.id = "wishlist-courses";
         wishlistCourses.style.cssText = `
-            display: block;
             width: 100%;
-            height: auto;
-            background-color: #e7e7e7;
+            height: 100%;
+            background-color: rgb(219, 219, 219);
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            max-height: 800px;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 10px;  
+            overflow-y: auto;
         `;
 
         // Adding to parent
@@ -5714,21 +5823,27 @@
     function setupScheduleButtonsInEachCourse() {
         const rows = getRows();
 
-        rows.forEach((row, index) => {
-            // Defining td element which is main controller
+        rows.forEach((row) => {
+            // td (table cell)
             const courseControllerTD = document.createElement('td');
             courseControllerTD.id = "course-controller-td";
             courseControllerTD.style.cssText = `
                 border: 1px solid rgba(0, 0, 0, 0.3);
+                padding: 8px 12px;
+                vertical-align: middle;
+            `;
+
+            // inner flex wrapper
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = `
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 100px;
             `;
 
-            // Adding controller for adding to schedule
+            // add button
             const courseAddButton = document.createElement('div');
-            courseAddButton.id = `course-add-button`;
+            courseAddButton.id = "course-add-button";
             courseAddButton.style.cssText = `
                 width: 28px;
                 height: 28px;
@@ -5740,16 +5855,13 @@
                 cursor: pointer;
                 font-size: 16px;
                 margin-right: 7px;
+                transition: background-color 0.2s ease;
             `;
-            courseAddButton.textContent = `+`;
-            courseAddButton.title = "Add course";
+            courseAddButton.textContent = "+";
 
-            // Adding button to td
-            courseControllerTD.appendChild(courseAddButton);
-
-            // Adding controller for saving to schedule
+            // save button
             const courseSaveButton = document.createElement('div');
-            courseSaveButton.id = `course-save-button`;
+            courseSaveButton.id = "course-save-button";
             courseSaveButton.style.cssText = `
                 width: 28px;
                 height: 28px;
@@ -5760,15 +5872,15 @@
                 border-radius: 4px;
                 cursor: pointer;
                 font-size: 20px;
+                transition: background-color 0.2s ease;
             `;
-            courseSaveButton.textContent = `♥`;
+            courseSaveButton.textContent = "♥";
 
-            // Adding button to td
-            courseControllerTD.appendChild(courseSaveButton);
-
-            // Adding td to row
+            wrapper.append(courseAddButton, courseSaveButton);
+            courseControllerTD.appendChild(wrapper);
             row.appendChild(courseControllerTD);
         });
+
 
 
     }
@@ -5786,6 +5898,9 @@
 
         // Reloading also highlighting
         highlightRows();
+
+        // Saving to storage
+        saveToStorage();
     }
 
 
@@ -5799,6 +5914,9 @@
 
         // Reloading wishlist
         loadWishlist();
+
+        // Saving to storage
+        saveToStorage();
     }
 
     // Function which loads all wish lists
@@ -5877,19 +5995,20 @@
             padding: 10px;
             border-radius: 5px;
             position: relative;
-            max-width: 200px;
             transition: background-color 0.2s;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 100%;
         `;
 
         // If course with given id exists then it must be shown as disabled
         if (courseRow) {
             // Making existing background color
             courseDiv.style.backgroundColor = "#607D8B";
-            // courseDiv.style.backgroundColor = "#4caf4fdc";
 
         }
         else {
@@ -5907,7 +6026,7 @@
         courseTitle.style.cssText = `
                color: white;
                font-weight: bolder;
-               font-size: 15px; 
+               font-size: 17px; 
                margin-bottom: 10px;
             `;
         courseTitle.textContent = courseRow?.children[indexes.indexOf("name")].textContent.split("(")[0] ?? extractedCourseData.name;
@@ -5920,7 +6039,7 @@
         const courseInstructorName = document.createElement("div");
         courseInstructorName.style.cssText = `
             color: white;
-            font-size: 10px; 
+            font-size: 14px; 
             font-weight: bold;
             margin-bottom: 10px;
         `;
@@ -5934,7 +6053,7 @@
         const courseLocation = document.createElement("div");
         courseLocation.style.cssText = `
             color: white;
-            font-size: 10px;
+            font-size: 12px;
             margin-bottom: 10px;
         `;
         courseLocation.textContent = courseRow?.children[indexes.indexOf("location")].textContent ?? extractedCourseData.location;
@@ -6040,7 +6159,7 @@
             addFromWishlistToCalendarButton.textContent = "+"; // Minimalistic cross
             addFromWishlistToCalendarButton.style.cssText = `
                 border: none;
-                background-color: #1bad7d;
+                background-color: #65bfb2;
                 border-radius: 5px;
                 color: #ffffffff;
                 font-size: 16px;
@@ -6051,6 +6170,15 @@
                 bottom: 5px;
                 right: 5px;
             `;
+
+            // Adding hover effect for highlighting all course divs that are same
+            addFromWishlistToCalendarButton.onmouseover = () => {
+                addFromWishlistToCalendarButton.style.backgroundColor = '#52afa1ff';
+            }
+
+            addFromWishlistToCalendarButton.onmouseout = () => {
+                addFromWishlistToCalendarButton.style.backgroundColor = '#65bfb2';
+            };
 
             // Adding event listener
             addFromWishlistToCalendarButton.addEventListener("click", (event) => {
@@ -6063,6 +6191,12 @@
 
             // Add button to courseDiv
             courseDiv.appendChild(addFromWishlistToCalendarButton);
+        }
+
+        // Making smaller two fit two items if in wishlist
+        if (!forCalendar) {
+            courseDiv.style.width = "40%";
+            courseDiv.style.minWidth = "180px";
         }
 
         // Adding hover effect for highlighting all course divs that are same
@@ -6123,6 +6257,9 @@
 
         // Reloading wishlist
         loadWishlist()
+
+        // Saving to storage
+        saveToStorage();
     }
 
     // Function for adding class to wishlist (only visual)
@@ -6338,6 +6475,9 @@
 
         // Reloading also highlighting
         highlightRows();
+
+        // Saving to storage
+        saveToStorage();
     }
 
     // This function extracts course data from saved schedules if it is unavailable or modified in jenzabar
@@ -6510,7 +6650,16 @@
                 addButton.title = 'Remove course from schedule';
 
                 // Changin background color
-                addButton.style.backgroundColor = "#b94545fa";
+                addButton.style.backgroundColor = "#ff4d4de3";
+
+                // Adding hover effect
+                addButton.onmouseover = () => {
+                    addButton.style.backgroundColor = '#b32020e3';
+                }
+
+                addButton.onmouseout = () => {
+                    addButton.style.backgroundColor = '#ff4d4de3';
+                };
 
                 // Event listener for when clicked
                 addButton.onclick = () => {
@@ -6522,8 +6671,17 @@
                 addButton.textContent = '+';
 
                 if (checkCourseCanBeAdded(courseId)) {
-                    addButton.style.backgroundColor = "#3e913eef";
+                    addButton.style.backgroundColor = "#3e916eef";
                     addButton.title = `Click to add the course to Schedule ${schedulesData.activeScheduleIndex + 1}`
+
+                    // Adding hover effect
+                    addButton.onmouseover = () => {
+                        addButton.style.backgroundColor = '#257453ef';
+                    }
+
+                    addButton.onmouseout = () => {
+                        addButton.style.backgroundColor = '#3e916eef';
+                    };
 
                     // Event listener for when clicked
                     addButton.onclick = () => {
@@ -6532,16 +6690,19 @@
 
                     // Adding class to row for making clear that this course fits
                     row.classList.add("course-fits-schedule")
-
                 }
                 else {
-                    addButton.style.backgroundColor = "#cfceceff";
+                    addButton.style.backgroundColor = "#afadad";
                     addButton.style.cursor = "not-allowed";
                     addButton.title = `This course doesn't fit in Schedule ${schedulesData.activeScheduleIndex + 1}`
 
                     // Event listener for when clicked
                     addButton.onclick = () => {
                     }
+
+                    // Removing hover effect
+                    addButton.onmouseover = () => { }
+                    addButton.onmouseout = () => { };
                 }
             }
 
@@ -6551,15 +6712,33 @@
                 saveButton.style.color = "#ffffff";
                 saveButton.title = "Remove from Wishlist";
 
+                // Adding hover effect
+                saveButton.onmouseover = () => {
+                    saveButton.style.backgroundColor = '#af1313ff';
+                }
+
+                saveButton.onmouseout = () => {
+                    saveButton.style.backgroundColor = '#ff0000';
+                };
+
                 // Event listener for when clicked
                 saveButton.onclick = () => {
                     removeCourseFromWishlist(`${row.dataset.courseId}`);
                 }
             }
             else {
-                saveButton.style.backgroundColor = "#e4e4e4ff";
+                saveButton.style.backgroundColor = "#d1d1d1ff";
                 saveButton.style.color = "#ff0000";
                 saveButton.title = "Add to Wishlist";
+
+                // Adding hover effect
+                saveButton.onmouseover = () => {
+                    saveButton.style.backgroundColor = '#adadadff';
+                }
+
+                saveButton.onmouseout = () => {
+                    saveButton.style.backgroundColor = '#d1d1d1ff';
+                };
 
                 // Event listener for when clicked
                 saveButton.onclick = () => {
@@ -6585,23 +6764,23 @@
             // Creating switch for each calendar
             const scheduleSwitchElement = document.createElement('div');
             scheduleSwitchElement.style.cssText = `
-                min-width: 120px;
-                padding: 5px;
-                max-height: 40%;
-                height: auto;
-                text-elign: center;
-                background-color: #a7a6a6ff;
-                margin-left: 10px;
-                margin-right: 10px;
-                color: white;
-                border-radius: 5px;
-                cursor: pointer;
-                transition: background-color 0.2s;
-            `;
+    min-width: 120px;
+    padding: 5px;
+    max-height: 40%;
+    height: auto;
+    background-color: #a7a6a6ff;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+`;
 
             // Highlighting the active one
             if (scheduleIndex === schedulesData.activeScheduleIndex) {
-                scheduleSwitchElement.style.backgroundColor = '#3f5688ff'
+                scheduleSwitchElement.style.backgroundColor = '#607d8b'
             }
 
             // Adding hover effect to schedule switch
@@ -6625,6 +6804,9 @@
 
                 // Reloading schedule
                 loadSchedule();
+
+                // Saving to storage
+                saveToStorage();
             }
 
             // Creating delete button for each schedule switch
@@ -6632,18 +6814,20 @@
             scheduleSwitchDeleteButton.textContent = 'x';
             scheduleSwitchDeleteButton.title = 'Delete this schedule.';
             scheduleSwitchDeleteButton.style.cssText = `
-                width: 20px;
-                height: 20px;
-                background-color: #c74d4dff;
-                color: white;
-                position: relative;
-                text-align: center;
-                left: 100px;
-                bottom: 19px;
-                border-radius: 3px;
-                cursor: pointer;
-                transition: background-color 0.3s;
-            `;
+    width: 20px;
+    height: 20px;
+    background-color: #c74d4dff;
+    color: white;
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    line-height: 20px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+`;
 
             // Adding hover effect to remove button
             scheduleSwitchDeleteButton.onmouseover = () => {
@@ -6670,6 +6854,9 @@
 
                 // Reloading schedules
                 loadSchedule();
+
+                // Saving to storage
+                saveToStorage();
             }
 
             // Adding delete button
@@ -6683,7 +6870,7 @@
         const addNewSwitchButton = document.createElement('div')
         addNewSwitchButton.textContent = "+";
         addNewSwitchButton.style.cssText = `
-            background-color: #4470a8ff;
+            background-color: #607d8b;
             color: white;
             font-size: 20px;
             border-radius: 2px;
@@ -6696,11 +6883,11 @@
 
         // Adding hover effect to add new calendar button
         addNewSwitchButton.onmouseover = () => {
-            addNewSwitchButton.style.backgroundColor = '#38649cff'; // darker
+            addNewSwitchButton.style.backgroundColor = '#527383ff'; // darker
         };
 
         addNewSwitchButton.onmouseout = () => {
-            addNewSwitchButton.style.backgroundColor = '#4470a8ff'; // original
+            addNewSwitchButton.style.backgroundColor = '#607d8b'; // original
         };
 
         // Adding event listener for creating new calendar
@@ -6710,6 +6897,9 @@
 
             // Reloading schedule
             loadSchedule();
+
+            // Saving to storage
+            saveToStorage();
         }
 
 
@@ -6986,5 +7176,11 @@ END:VEVENT
 
         // Loading wishlist first time
         loadWishlist();
+
+        // Updating columns count (to remove empty saturday and sunday)
+        updateGridColumnsByVisibleDivs();
+
+        // Showing or hiding (if user closed or showed before)
+        applyScheduleVisibility();
     }
 })();
