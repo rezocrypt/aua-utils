@@ -75,10 +75,14 @@ Here are the single-function-script plugins, which are injected into the corresp
 
 ### AUA Courses Plugin
 
-AUA Courses Plugin helps you find and filter courses more quickly and with greater flexibility.
+AUA Courses Plugin helps you find and filter courses more quickly and with greater flexibility. It also includes information about general education requirements and adds a scheduling feature where you can create a calendar with multiple schedules, a wishlist, and import or export calendars (compatible with Google Calendar).
 
 <img width="1908" height="816" alt="courses-plugin-1" src="https://github.com/user-attachments/assets/bd4db00e-dabe-412b-9129-fbd309a783cd" />
+
+
 <img width="1889" height="859" alt="courses-plugin-2" src="https://github.com/user-attachments/assets/de0adbef-fd77-47e7-a84a-ec88520256c8" />
+
+
 <img width="1892" height="872" alt="courses-plugin-3" src="https://github.com/user-attachments/assets/3ecfa4e3-9544-4edd-b7d1-68d39a635198" />
 
 
