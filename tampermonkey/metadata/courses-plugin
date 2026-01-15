@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         AUA Courses Plugin 
 // @namespace    https://github.com/rezocrypt/aua-utils/
-// @version      1.0.0
+// @version      1.2.0
 // @description  AUA Courses Plugin helps you find and filter courses more quickly and with greater flexibility.
 // @match        https://auasonis.jenzabarcloud.com/GENSRsC.cfm*
 // @run-at       document-end
-// @grant        none
-// @icon         https://aua.am/favicon.ico
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @icon         https://raw.githubusercontent.com/rezocrypt/aua-utils/refs/heads/main/resources/logos/logo.png
 // @author       rezocrypt 
 // @supportURL   https://t.me/rezocrypt
 // @updateURL    https://github.com/rezocrypt/aua-utils/blob/main/tampermonkey/output/scripts/courses-plugin.js

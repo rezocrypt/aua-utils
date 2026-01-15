@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AUA Utils Plugins Loader (Not full extension)
 // @namespace    https://github.com/rezocrypt/aua-utils
-// @version      1.0.0
+// @version      1.2.0
 // @description  Loads AUA Utils plugins only
 // @icon         https://aua.am/favicon.ico
 // @match        *://*/*

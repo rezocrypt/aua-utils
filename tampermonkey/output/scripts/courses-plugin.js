@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         AUA Courses Plugin 
 // @namespace    https://github.com/rezocrypt/aua-utils/
-// @version      1.0.0
+// @version      1.2.0
 // @description  AUA Courses Plugin helps you find and filter courses more quickly and with greater flexibility.
 // @match        https://auasonis.jenzabarcloud.com/GENSRsC.cfm*
 // @run-at       document-end
-// @grant        none
-// @icon         https://aua.am/favicon.ico
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @icon         https://raw.githubusercontent.com/rezocrypt/aua-utils/refs/heads/main/resources/logos/logo.png
 // @author       rezocrypt 
 // @supportURL   https://t.me/rezocrypt
 // @updateURL    https://github.com/rezocrypt/aua-utils/blob/main/tampermonkey/output/scripts/courses-plugin.js
@@ -21,6 +22,12 @@
 
     if (!location.href.includes("auasonis.jenzabarcloud.com/GENSRsC.cfm")) return;
 
+
+    // ----- Checking if already exists -----
+
+    if (document.getElementById("aua-courses-plugin-window")) { location.reload(true); }
+
+
     // ----- Global Variables And Constants -----
 
     let courses = [];
@@ -29,238 +36,101 @@
     let checkedDays = [];
     let notificationShown = false;
 
+    // To automatically focus to search engine when new switched to current tab
     document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") {
             document.getElementById("searchInput").focus();
         }
     });
 
+    // In which index is which field
     const indexes = ["name", "section", "session", "credits", "campus", "instructor", "times", "seats", "spacesWaiting", "deliveryMethod", "distanceLearning", "location", "gened", "schedule"]
 
+    // Containing chcked days, available times and time checkboxes
     const dayCheckboxes = {};
     const availableTimes = [];
     const timeCheckboxes = {};
 
-    // let schedulesData = {
-    //     schedules: [{}, {}, {}],
-    //     wishlist: {},
-    //     activeScheduleIndex: 0,
-    //     isScheduleOpened: true
-    // }
 
-    // Defining storage
-    const storage = (typeof browser !== "undefined") ? browser.storage : chrome.storage;
+    // ----- Storage -----
 
     // Define global variable
     let schedulesData;
+    let saveToStorage;
 
-    // First time getting (or setting if not set) the schedules data to persistant storage
+    // Defining storage
+    let storage = null;
 
-    (async () => {
-        console.log("Loading schedulesData from storage...");
+    // Trying to select storage;
+    try {
+        storage = (typeof browser !== "undefined") ? browser.storage : chrome.storage;
+    } catch (error) {
+        storage = null;
+    }
 
-        const result = await storage.local.get("schedulesData");
+    // Checking if we are run by tampermonkey or firefox or chrome inside extension
+    if (storage) {
 
-        if (!result.schedulesData) {
-            console.log("No schedulesData found. Creating default object...");
+        // ----- Chrome and Firefox extension storage -----
+
+        // First time getting (or setting if not set) the schedules data to persistant storage
+
+        (async () => {
+            console.log("Loading schedulesData from storage...");
+
+            const result = await storage.local.get("schedulesData");
+
+            if (!result.schedulesData) {
+                console.log("No schedulesData found. Creating default object...");
+                schedulesData = {
+                    schedules: [{}, {}, {}],
+                    wishlist: {},
+                    activeScheduleIndex: 0,
+                    isScheduleOpened: false
+                };
+                await storage.local.set({ schedulesData });
+                console.log("Default schedulesData saved:", schedulesData);
+            } else {
+                schedulesData = result.schedulesData;
+                console.log("Existing schedulesData loaded:", schedulesData);
+            }
+
+            // Example: debug current state
+            console.log("Current schedulesData:", schedulesData);
+        })();
+
+        // Function which saves data to local storage
+        saveToStorage = () => {
+            storage.local.set({ schedulesData });
+        }
+    }
+    else {
+
+        // ----- Tampermonkey storage -----
+
+        schedulesData = GM_getValue("schedulesData", null);
+
+        if (!schedulesData) {
             schedulesData = {
                 schedules: [{}, {}, {}],
                 wishlist: {},
                 activeScheduleIndex: 0,
-                isScheduleOpened: true
+                isScheduleOpened: false
             };
-            await storage.local.set({ schedulesData });
-            console.log("Default schedulesData saved:", schedulesData);
-        } else {
-            schedulesData = result.schedulesData;
-            console.log("Existing schedulesData loaded:", schedulesData);
+            GM_setValue("schedulesData", schedulesData);
         }
 
-        // Example: debug current state
-        console.log("Current schedulesData:", schedulesData);
-    })();
+        // Function which saves data to local storage
+        saveToStorage = () => {
+            GM_setValue("schedulesData", schedulesData);
+        }
 
-    // Function which saves data to local storage
-    function saveToStorage() {
-        storage.local.set({ schedulesData });
     }
 
 
-    // schedulesData.wishlist = {
-    //     "b5869cc0b5869cc0b5869cac0b5869cc0": {
-    //         "name": "Calculus 2",
-    //         "times": "MON 9:30am-10:20am, WED 9:30am-10:20am, FRI 9:30am-10:20am",
-    //         "timesFormatted": [
-    //             {
-    //                 "weekday": "monday",
-    //                 "start": 570,
-    //                 "end": 620
-    //             },
-    //             {
-    //                 "weekday": "wednesday",
-    //                 "start": 570,
-    //                 "end": 620
-    //             },
-    //             {
-    //                 "weekday": "friday",
-    //                 "start": 570,
-    //                 "end": 620
-    //             }
-    //         ],
-    //         "instructor": "Karen Keryan",
-    //         "location": "Classroom 414W Paramaz Avedissian Building"
-    //     },
-    // }
-    // schedulesData.schedules = [
-    //     {
-    //         "99fcbe6b99fcbe6b99fcbe6b99fcbe6b": {
-    //             "name": "Mechanics",
-    //             "times": "TUE 1:30pm-2:50pm, THU 1:30pm-2:50pm",
-    //             "timesFormatted": [
-    //                 {
-    //                     "weekday": "tuesday",
-    //                     "start": 810,
-    //                     "end": 890
-    //                 },
-    //                 {
-    //                     "weekday": "thursday",
-    //                     "start": 810,
-    //                     "end": 890
-    //                 }
-    //             ],
-    //             "instructor": "Hrachya Kocharyan",
-    //             "location": "Classroom 413W Paramaz Avedissian Building"
-    //         },
-    //         "19a511e819a511e819a511e819a511e8": {
-    //             "name": "Mechanics Lab",
-    //             "times": "TUE 10:30am-11:50am",
-    //             "timesFormatted": [
-    //                 {
-    //                     "weekday": "tuesday",
-    //                     "start": 630,
-    //                     "end": 710
-    //                 }
-    //             ],
-    //             "instructor": "Bilor Kurghinyan",
-    //             "location": "Physics Lab Main Building"
-    //         },
-    //         "4d1a08b34d1a08b34d1a08b34d1a08b3": {
-    //             "name": "Freshman Seminar 2",
-    //             "times": "TUE 9:00am-10:20am, THU 9:00am-10:20am",
-    //             "timesFormatted": [
-    //                 {
-    //                     "weekday": "tuesday",
-    //                     "start": 540,
-    //                     "end": 620
-    //                 },
-    //                 {
-    //                     "weekday": "thursday",
-    //                     "start": 540,
-    //                     "end": 620
-    //                 }
-    //             ],
-    //             "instructor": "Dvin Titizian",
-    //             "location": "Classroom 204M Main Building"
-    //         },
-    //         "b5869cc0b5869cc0b5869cc0b5869cc0": {
-    //             "name": "Calculus 2",
-    //             "times": "MON 9:30am-10:20am, WED 9:30am-10:20am, FRI 9:30am-10:20am",
-    //             "timesFormatted": [
-    //                 {
-    //                     "weekday": "monday",
-    //                     "start": 570,
-    //                     "end": 620
-    //                 },
-    //                 {
-    //                     "weekday": "wednesday",
-    //                     "start": 570,
-    //                     "end": 620
-    //                 },
-    //                 {
-    //                     "weekday": "friday",
-    //                     "start": 570,
-    //                     "end": 620
-    //                 }
-    //             ],
-    //             "instructor": "Karen Keryan",
-    //             "location": "Classroom 414W Paramaz Avedissian Building"
-    //         },
-    //         "1e8fa2c21e8fa2c21e8fa2c21e8fa2c2": {
-    //             "name": "Linear Algebra",
-    //             "times": "MON 8:30am-9:20am, WED 8:30am-9:20am, FRI 8:30am-9:20am",
-    //             "timesFormatted": [
-    //                 {
-    //                     "weekday": "monday",
-    //                     "start": 510,
-    //                     "end": 560
-    //                 },
-    //                 {
-    //                     "weekday": "wednesday",
-    //                     "start": 510,
-    //                     "end": 560
-    //                 },
-    //                 {
-    //                     "weekday": "friday",
-    //                     "start": 510,
-    //                     "end": 560
-    //                 }
-    //             ],
-    //             "instructor": "Vahagn Mikayelyan",
-    //             "location": "Classroom 306E Paramaz Avedissian Building"
-    //         },
-    //         "729295e8729295e8729295e8729295e8": {
-    //             "name": "The Scientific Method & Critical Thinking",
-    //             "times": "MON 11:30am-12:20pm, WED 11:30am-12:20pm, FRI 11:30am-12:20pm",
-    //             "timesFormatted": [
-    //                 {
-    //                     "weekday": "monday",
-    //                     "start": 690,
-    //                     "end": 740
-    //                 },
-    //                 {
-    //                     "weekday": "wednesday",
-    //                     "start": 690,
-    //                     "end": 740
-    //                 },
-    //                 {
-    //                     "weekday": "friday",
-    //                     "start": 690,
-    //                     "end": 740
-    //                 }
-    //             ],
-    //             "instructor": "David B Davidian",
-    //             "location": "Classroom 113W Paramaz Avedissian Building"
-    //         },
-    //         "460bef30460bef30460bef30460bef30": {
-    //             "name": "Comparative Politics",
-    //             "times": "MON 10:30am-11:20am, WED 10:30am-11:20am, FRI 10:30am-11:20am",
-    //             "timesFormatted": [
-    //                 {
-    //                     "weekday": "monday",
-    //                     "start": 630,
-    //                     "end": 680
-    //                 },
-    //                 {
-    //                     "weekday": "wednesday",
-    //                     "start": 630,
-    //                     "end": 680
-    //                 },
-    //                 {
-    //                     "weekday": "friday",
-    //                     "start": 630,
-    //                     "end": 680
-    //                 }
-    //             ],
-    //             "instructor": "Yevgenya Paturyan",
-    //             "location": "Classroom 215E Paramaz Avedissian Building"
-    //         }
-    //     },
-    //     {},
-    //     {}
-    // ]
-
-
+    // Aua blue color
     const AUA_BLUE = "#002147";
+
 
     // This function generates a params object for fetching courses. This is complex because Jenzabar
     // doesn't provide automaticaly correct semester and year parameters so we need to find it by
@@ -477,6 +347,7 @@
             position: sticky;
             top: 0;
             z-index: 10;
+            user-select: none;
         `;
 
         // Creating image container for AUA log
@@ -493,6 +364,9 @@
         image.style.cssText = `
             width: 40px;
             height: 40px;
+            -webkit-user-drag: none;
+            user-drag: none;
+            user-select: none;
         `;
         imageContainer.appendChild(image);
 
@@ -2741,11 +2615,22 @@
                 themes
             });
         });
+
+        // Printing courses
+        console.log(courses)
     }
 
     // Defining an object which will just contain all available geneds information.
     // It is static and must be updated manually time by time
     const geneds = [
+        {
+            "code": "Subject Code",
+            "courseNumber": "Course Number",
+            "name": "Course Title",
+            "themes": [
+                "Themes"
+            ]
+        },
         {
             "code": "BAB",
             "courseNumber": "101",
@@ -3799,7 +3684,7 @@
         {
             "code": "CSE",
             "courseNumber": "111",
-            "name": "The Scientific Method & Critical Thinking",
+            "name": "The Scientific Method and Critical Thinking",
             "themes": [
                 "3",
                 "6",
@@ -4183,6 +4068,17 @@
         },
         {
             "code": "EC",
+            "courseNumber": "138",
+            "name": "Media & Society (Previously EC 238)",
+            "themes": [
+                "1",
+                "4",
+                "5",
+                "6"
+            ]
+        },
+        {
+            "code": "EC",
             "courseNumber": "140",
             "name": "Expository Writing",
             "themes": [
@@ -4315,7 +4211,7 @@
         {
             "code": "EC",
             "courseNumber": "227",
-            "name": "Modern Poetry (No longer offered)",
+            "name": "Modern Poetry",
             "themes": [
                 "1",
                 "3"
@@ -4382,17 +4278,6 @@
             "themes": [
                 "1",
                 "4"
-            ]
-        },
-        {
-            "code": "EC",
-            "courseNumber": "138",
-            "name": "Media & Society (Previously EC 238)",
-            "themes": [
-                "1",
-                "4",
-                "5",
-                "6"
             ]
         },
         {
@@ -4474,14 +4359,6 @@
                 "1",
                 "4",
                 "6"
-            ]
-        },
-        {
-            "code": "EC",
-            "courseNumber": "268",
-            "name": "Photography (CHSS 268 as of Spring 2024)",
-            "themes": [
-                "1"
             ]
         },
         {
@@ -4707,17 +4584,6 @@
         },
         {
             "code": "ENV",
-            "courseNumber": "150",
-            "name": "Basics of Sustainable Energy  (Not open to ESS students. Not open to ES students as General Education)",
-            "themes": [
-                "4",
-                "7",
-                "8",
-                "9"
-            ]
-        },
-        {
-            "code": "ENV",
             "courseNumber": "201",
             "name": "Environmental Field Studies",
             "themes": [
@@ -4866,7 +4732,7 @@
         },
         {
             "code": "PG",
-            "courseNumber": "104Ge",
+            "courseNumber": "104",
             "name": "Comparative Politics",
             "themes": [
                 "4"
@@ -5037,6 +4903,19 @@
         }
     ]
 
+    // Function which just checks if course and gened match
+    function courseMatchesGened(courseName, genedName) {
+        const normalize = (str) =>
+            str
+                .toLowerCase()
+                .replace(/&/g, "and")
+                .replace(/\s+/g, " ")
+                .trim();
+
+        return normalize(genedName).includes(normalize(courseName));
+    }
+
+
     // Function that loads all gened information in rows of table
     function setupGeneds() {
         // Appending thead to include also title for Gened row
@@ -5059,7 +4938,7 @@
             // Iterating through each gened
             for (const gened of geneds) {
                 // Checking if gened name includes course name
-                if (gened.name.toLowerCase().includes(rowCourseName)) {
+                if (courseMatchesGened(rowCourseName, gened.name)) {
                     // Defining gened <td>
                     const genedTd = document.createElement("td");
                     genedTd.id = "gened-td";
@@ -5272,12 +5151,14 @@
             const courseSection = row.children[1].textContent;
             const courseInstructor = row.children[5].textContent;
             const courseTimes = row.children[6].textContent;
+            const courseLocation = row.children[11].textContent;
 
             // Combining to one variable for getting id from it
             courseUniqueText += courseName;
             courseUniqueText += courseSection;
             courseUniqueText += courseInstructor;
             courseUniqueText += courseTimes;
+            courseUniqueText += courseLocation;
 
             // Getting id from course unique text
             const courseId = generateHash(courseUniqueText);
@@ -5511,6 +5392,7 @@
         scheduleOpenerButton.style.cssText = `
             width: 100%;
             cursor: pointer;
+            box-sizing: border-box;
             height: auto;
             text-align: center;
             font-size: 21px;
@@ -5519,6 +5401,9 @@
             margin-top: 15px;
             padding: 7px;
             margin-bottom: 15px;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
             border-radius: 5px;
             font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", Arial, sans-serif !important;
         `

@@ -1,4 +1,4 @@
-# AUA Utils
+# AUA Utils v1.2.0
 
 AUA Utils is a collection of minimalistic and clean utility scripts and tools designed to enhance the AUA web experience (official extension are available for Firefox and Chrome).
 
@@ -98,7 +98,7 @@ Useful Links is a special section in the AUA Utils extension where important and
 
 It is very intuitive to use each utility, but here is a simple YouTube tutorial. For now, the plugins just provide a popup with different filters for classes. See the overview here.
 
-- https://www.youtube.com/watch?v=SvFOguzt2LA
+- https://www.youtube.com/watch?v=RG3SD51aucE
 
 
 # Contributing

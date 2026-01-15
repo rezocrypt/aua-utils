@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         AUA Gened Plugin
 // @namespace    https://github.com/rezocrypt/aua-utils/
-// @version      1.0.0
+// @version      1.2.0
 // @description  AUA Gened Plugin helps you find general education courses by keyword, theme, or level.
 // @match        https://gened.aua.am/courses-and-their-clusters/
 // @run-at       document-end
-// @grant        none
-// @icon         https://aua.am/favicon.ico
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @icon         https://raw.githubusercontent.com/rezocrypt/aua-utils/refs/heads/main/resources/logos/logo.png
 // @author       rezocrypt
 // @match        *://*/*
 // @supportURL   https://t.me/rezocrypt
@@ -15,7 +16,7 @@
 // @license      GPL-3.0
 // ==/UserScript==
 
-(function() {
+(function () {
         "use strict";
 
         /* 
@@ -710,45 +711,40 @@
 
         // Variable to keep track of last scrolled index for Enter key navigation
         let lastScrolledIndex = -1;
+        let currentIndex = -1;
 
         // Adding keydown event listener to search input for Enter and Shift+Enter key navigation
         searchInput.addEventListener("keydown", (e) => {
                 if (e.key !== "Enter") return;
 
-                const rows = Array.from(table.querySelectorAll("tbody tr.matching"))
-                        .filter(row => row.offsetParent !== null);
-                if (!rows.length) return;
+                const rows = Array.from(
+                        table.querySelectorAll("tbody tr.matching")
+                ).filter(row => row.offsetParent !== null);
 
-                // Clear old temporary highlights
-                rows.forEach(r => {
-                        if (r.dataset.tempHighlight === "true") {
-                                r.style.backgroundColor = "";
-                                delete r.dataset.tempHighlight;
-                        }
-                });
+                if (rows.length === 0) return;
 
-                // Determine next index: Shift+Enter for previous
+                // Move index
                 if (e.shiftKey) {
-                        lastScrolledIndex = (lastScrolledIndex - 1 + rows.length) % rows.length;
+                        currentIndex--;
+                        if (currentIndex < 0) currentIndex = rows.length - 1;
                 } else {
-                        lastScrolledIndex = (lastScrolledIndex + 1) % rows.length;
+                        currentIndex++;
+                        if (currentIndex >= rows.length) currentIndex = 0;
                 }
 
-                const row = rows[lastScrolledIndex];
+                const row = rows[currentIndex];
 
-                // Scroll to row
-                row.scrollIntoView({ behavior: "smooth", block: "center" });
+                // Scroll
+                row.scrollIntoView({ block: "center" });
 
-                // Temporary highlight
-                row.dataset.tempHighlight = "true";
-                const originalBg = row.style.backgroundColor;
+                // Highlight
+                const oldColor = row.style.backgroundColor;
                 row.style.backgroundColor = "#ffcc33";
-                setTimeout(() => {
-                        row.style.backgroundColor = originalBg;
-                        delete row.dataset.tempHighlight;
-                }, 500);
-        });
 
+                setTimeout(() => {
+                        row.style.backgroundColor = oldColor;
+                }, 400);
+        });
 
 
         // ----- Core Highlighting Logic -----
