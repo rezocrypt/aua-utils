@@ -368,11 +368,19 @@
             user-drag: none;
             user-select: none;
         `;
+
+        // Preventing image mousedown
+        image.onmousedown = function (event) {
+            event.preventDefault();
+        };
+
+        // Adding image to its container
         imageContainer.appendChild(image);
 
         // Appending image container to header
         header.appendChild(imageContainer);
 
+        
         // Creating header text for plugin
         const headerText = document.createElement("div");
         headerText.textContent = "AUA Courses Plugin";
