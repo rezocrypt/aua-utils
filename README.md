@@ -79,9 +79,7 @@ AUA Courses Plugin helps you find and filter courses more quickly and with great
 
 <img width="1908" height="816" alt="courses-plugin-1" src="https://github.com/user-attachments/assets/bd4db00e-dabe-412b-9129-fbd309a783cd" />
 
-
 <img width="1889" height="859" alt="courses-plugin-2" src="https://github.com/user-attachments/assets/de0adbef-fd77-47e7-a84a-ec88520256c8" />
-
 
 <img width="1892" height="872" alt="courses-plugin-3" src="https://github.com/user-attachments/assets/3ecfa4e3-9544-4edd-b7d1-68d39a635198" />
 
